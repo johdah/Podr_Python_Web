@@ -1,0 +1,7 @@
+<h1>{{ subscription.title }}</h1>
+<ul>
+    {% for episode in episode.episode_set.all %}
+        <li>{{ episode.title }}</li>
+    {% endfor %}
+</ul>
+<p><a href="{% url 'subscription:index' %}">Back to subscription list</a></p>
