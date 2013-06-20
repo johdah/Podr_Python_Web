@@ -4,6 +4,9 @@
 *.iws
 .idea/
 
+## DB
+*.sqlite3
+
 ## Django
 *.log
 *.pot
