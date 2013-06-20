@@ -38,6 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'podr',
+    'episode',
+    'subscription'
 )
 
 MIDDLEWARE_CLASSES = (

@@ -1,0 +1,9 @@
+{% if latest_subscription_list %}
+    <ul>
+        {% for subscription in latest_subscription_list %}
+            <li><a href="/subscription/{{ subscription.id }}/">{{ subscription.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No subscriptions are available.</p>
+{% endif %}
