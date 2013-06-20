@@ -1,0 +1,11 @@
+## IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+## Django
+*.log
+*.pot
+*.pyc
+local_settings.py
