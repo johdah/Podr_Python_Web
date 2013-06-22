@@ -1,6 +1,6 @@
 <h1>{{ subscription.title }}</h1>
 <ul>
-    {% for episode in episode.episode_set.all %}
+    {% for episode in subscription.episode_set.all %}
         <li>{{ episode.title }}</li>
     {% endfor %}
 </ul>

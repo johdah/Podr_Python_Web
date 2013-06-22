@@ -1,4 +1,6 @@
-from django.http import HttpResponse
+from django.shortcuts import render
+
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the podr index.")
+    context = {'title': 'Welcome to PodR'}
+    return render(request, 'podr/index.html', context)
