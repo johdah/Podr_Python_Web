@@ -8,12 +8,91 @@
         <li class="active">{{ subscription.title }}</li>
     </ul>
 
-    <h1>{{ subscription.title }}</h1>
-    <ul>
-        {% for episode in subscription.episode_set.all %}
-            <li>{{ episode.title }}</li>
-        {% endfor %}
-    </ul>
-    <p><a href="{% url 'subscription:index' %}">Back to subscription list</a></p>
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="thumbnails span12">
+                <a href="#" class="thumbnail">
+                    {% if subscription.itunes_image %}
+                        <img src="{{ subscription.itunes_image }}" alt="" width="260">
+                    {% else %}
+                        <img data-src="holder.js/240x240" alt="">
+                    {% endif %}
+                </a>
+            </div>
+
+            <p class="muted">Rating</p>
+            {% if subscription.itunes_explicit %}
+                <p>Parental Advisory</p>
+            {% endif %}
+            <p>{{ subscription.language }}</p>
+            <p class="muted">Categories</p>
+            <p><a href="mailto:{{ subscription.itunes_owner_email }}">{{ subscription.itunes_owner_name }}</a></p>
+            <p>Last updated: {{ subscription.last_updated|date:"Y-m-d H:i:s" }}</p>
+            <p>{{ subscription.copyright }}</p>
+
+            <h5>Links</h5>
+            <p class="muted"><a href="{{ subscription.link }}">Feed</a></p>
+        </div>
+        <div class="span9">
+            <h1>{{ subscription.title }}</h1>
+            <h4>{{ subscription.itunes_author }}</h4>
+
+            <h4>Description</h4>
+            {% if subscription.itunes_summary %}
+                <p>{{ subscription.itunes_summary }}</p>
+            {% else %}
+                <p>{{ subscription.description }}</p>
+            {% endif %}
+
+            {% if subscription.itunes_complete %}
+                <div class="alert alert-info">
+                    This podcast is discontinued
+                </div>
+            {% endif %}
+
+            <h2>Episode list</h2>
+
+            <table class="records_list table table-striped">
+                <caption>...</caption>
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Duration</th>
+                    <th>Published</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for episode in subscription.episode_set.all %}
+                    <tr>
+                        <td><a href="/episode/{{ episode.id }}/">{{ episode.id }}</a></td>
+                        <td>{{ episode.title }}</td>
+                        <td>{{ episode.itunes_duration }}</td>
+                        <td>{% if episode.pub_date %}{{ episode.pub_date|date:"Y-m-d H:i:s" }}{% endif %}</td>
+                        {% if episode.itunes_subtitle %}
+                            <td>{{ episode.itunes_subtitle }}</td>
+                        {% elif episode.itunes_summary %}
+                            <td>{{ episode.itunes_summary }}</td>
+                        {% else %}
+                            <td>No description</td>
+                        {% endif %}
+                        <td>{{ episode.itunes_explicit }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <ul class="record_actions">
+                <li>
+                    <a href="{% url 'subscription:index' %}">
+                        Back to subscription list
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}
