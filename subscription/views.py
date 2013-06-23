@@ -1,5 +1,5 @@
 from django import forms
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 from podr.models import Subscription
@@ -20,14 +20,16 @@ def index(request):
 
 #
 # A simple function for adding a new subscription.
-#  If subscription already exists, it's updated, otherwise created
+# If subscription already exists, it's updated, otherwise created
 #
 def add(request):
     subscription, created = Subscription.objects.get_or_create(link=request.POST['link'], defaults={'link': request.POST['link']})
 
     subscription = iTunesFeed.iTunesFeedParser.parseSubscription(subscription)
     subscription.save()
-    return HttpResponse("Response: %s" % subscription.link)
+
+    return HttpResponseRedirect('/subscription/%i/' % subscription.id)
+    #return HttpResponseRedirect(reverse('subscription:details', args=(subscription.id,)))
 
 
 def details(request, subscription_id):

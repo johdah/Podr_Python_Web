@@ -1,15 +1,24 @@
-import datetime
+from datetime import datetime
 from django.utils import timezone
 from django.db import models
 
 
 class Subscription(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default="Unknown")
     link = models.CharField(max_length=255)
     copyright = models.CharField(max_length=100, null=True)
-    description = models.TextField()
+    description = models.TextField(null=True)
     language = models.CharField(max_length=100, null=True)
-    last_updated = models.DateTimeField('Last updated')
+    itunes_author = models.CharField(max_length=100, null=True)
+    itunes_block = models.BooleanField(default=False)
+    itunes_complete = models.BooleanField(default=False)
+    itunes_explicit = models.BooleanField(default=False)
+    itunes_image = models.CharField(max_length=255, null=True)
+    itunes_owner_name = models.CharField(max_length=100, null=True)
+    itunes_owner_email = models.CharField(max_length=100, null=True)
+    itunes_subtitle = models.TextField(null=True)
+    itunes_summary = models.TextField(null=True)
+    last_updated = models.DateTimeField('Last updated', default=datetime.now())
 
     def __unicode__(self):
         return self.title

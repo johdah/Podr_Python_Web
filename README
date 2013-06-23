@@ -3,4 +3,7 @@ This file was created by IntelliJ IDEA (Cardea) IU-130.962 for binding GitHub re
 ## Requirements
 
 Python Libraries:
+- Distribute (https://pypi.python.org/pypi/distribute) # Alternative to setuptools
+
 - Pytz
+- python-dateutil (https://pypi.python.org/pypi/python-dateutil/) # Not used yet

@@ -9,8 +9,11 @@ class EpisodeInline(admin.TabularInline):
 
 class SubscriptionAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['title', 'link', 'copyright']}),
-        ('Date information', {'fields': ['last_updated'], 'classes': ['collapse']}),
+        ('General',             {'fields': ['title', 'link', 'copyright', 'description', 'language']}),
+        ('iTunes information',  {'fields': ['itunes_author', 'itunes_subtitle', 'itunes_summary', 'itunes_image',
+                                            'itunes_owner_name', 'itunes_owner_email', 'itunes_block',
+                                            'itunes_complete', 'itunes_explicit'], 'classes': ['collapse']}),
+        ('Date information',    {'fields': ['last_updated'], 'classes': ['collapse']}),
     ]
     date_hierarchy = 'last_updated'
     inlines = [EpisodeInline]
