@@ -1,19 +1,30 @@
-{% if latest_subscription_list %}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li class="active">Subscriptions</li>
+    </ul>
+
+    {% if latest_subscription_list %}
     <ul>
         {% for subscription in latest_subscription_list %}
             <li><a href="/subscription/{{ subscription.id }}/">{{ subscription.title }}</a></li>
         {% endfor %}
     </ul>
-{% else %}
+    {% else %}
     <p>No subscriptions are available.</p>
-{% endif %}
+    {% endif %}
 
-<h2>Add new subscription</h2>
-<p>If you are missing a subscription. Please add it to the service.</p>
+    <h2>Add new subscription</h2>
+    <p>If you are missing a subscription. Please add it to the service.</p>
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'subscription:add' %}" method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit" />
-</form>
+    <form action="{% url 'subscription:add' %}" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+{% endblock %}

@@ -1,2 +1,12 @@
-<h1>Welcome to PodR!</h1>
-<p><a href="{% url 'subscription:index' %}">Go to subscription list</a></p>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <ul class="breadcrumb">
+        <li class="active">Home</li>
+    </ul>
+
+    <h1>Welcome to PodR!</h1>
+    <p><a href="{% url 'subscription:index' %}">Go to subscription list</a></p>
+</div>
+{% endblock %}

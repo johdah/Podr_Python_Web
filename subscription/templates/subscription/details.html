@@ -1,7 +1,19 @@
-<h1>{{ subscription.title }}</h1>
-<ul>
-    {% for episode in subscription.episode_set.all %}
-        <li>{{ episode.title }}</li>
-    {% endfor %}
-</ul>
-<p><a href="{% url 'subscription:index' %}">Back to subscription list</a></p>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li><a href="{% url 'subscription:index' %}">Subscriptions</a> <span class="divider">/</span></li>
+        <li class="active">{{ subscription.title }}</li>
+    </ul>
+
+    <h1>{{ subscription.title }}</h1>
+    <ul>
+        {% for episode in subscription.episode_set.all %}
+            <li>{{ episode.title }}</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'subscription:index' %}">Back to subscription list</a></p>
+</div>
+{% endblock %}
