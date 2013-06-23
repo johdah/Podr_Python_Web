@@ -7,3 +7,13 @@
 {% else %}
     <p>No subscriptions are available.</p>
 {% endif %}
+
+<h2>Add new subscription</h2>
+<p>If you are missing a subscription. Please add it to the service.</p>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'subscription:add' %}" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>

@@ -9,7 +9,7 @@ class EpisodeInline(admin.TabularInline):
 
 class SubscriptionAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['title', 'link']}),
+        (None,               {'fields': ['title', 'link', 'copyright']}),
         ('Date information', {'fields': ['last_updated'], 'classes': ['collapse']}),
     ]
     date_hierarchy = 'last_updated'
