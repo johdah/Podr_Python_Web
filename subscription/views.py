@@ -18,6 +18,7 @@ def index(request):
     }
     return render(request, 'subscription/index.html', context)
 
+
 #
 # A simple function for adding a new subscription.
 # If subscription already exists, it's updated, otherwise created
@@ -25,8 +26,11 @@ def index(request):
 def add(request):
     subscription, created = Subscription.objects.get_or_create(link=request.POST['link'], defaults={'link': request.POST['link']})
 
-    subscription = iTunesFeed.iTunesFeedParser.parseSubscription(subscription)
+    subscription, episodes = iTunesFeed.iTunesFeedParser.parse(subscription)
     subscription.save()
+
+    for episode in episodes:
+        episode.save()
 
     return HttpResponseRedirect('/subscription/%i/' % subscription.id)
     #return HttpResponseRedirect(reverse('subscription:details', args=(subscription.id,)))
@@ -35,3 +39,14 @@ def add(request):
 def details(request, subscription_id):
     subscription = get_object_or_404(Subscription, pk=subscription_id)
     return render(request, 'subscription/details.html', {'subscription': subscription})
+
+
+def update(request, subscription_id):
+    subscription = get_object_or_404(Subscription, pk=subscription_id)
+    subscription, episodes = iTunesFeed.iTunesFeedParser.parse(subscription)
+    subscription.save()
+
+    for episode in episodes:
+        episode.save()
+
+    return HttpResponseRedirect('/subscription/%i/' % subscription.id)

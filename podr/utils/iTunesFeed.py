@@ -1,17 +1,31 @@
 from datetime import datetime
 import urllib.request
 import xml.etree.ElementTree as ET
+from podr.models import Episode
 
 XML_NS = {'itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd'}
 
 
 class iTunesFeedParser():
-    @staticmethod
-    def parseSubscription(subscription):
+    def parse(subscription):
         response = urllib.request.urlopen(subscription.link)
         html = response.read().decode("utf8")
 
         root = ET.fromstring(html)[0]
+        subscription = iTunesFeedParser.parseSubscription(subscription, root)
+
+        items = list(root.iter("item"))
+        episodes = iTunesFeedParser.parseEpisodes(subscription, items)
+
+        #return subscription
+        return subscription, episodes
+
+    @staticmethod
+    def parseSubscription(subscription, root):
+        #response = urllib.request.urlopen(subscription.link)
+        #html = response.read().decode("utf8")
+
+        #root = ET.fromstring(html)[0]
 
         subscription_title = root.find('title')
         subscription_copyright = root.find('copyright')
@@ -75,5 +89,43 @@ class iTunesFeedParser():
 
         return subscription
 
-    #def parseEpisodes():
-        #datetime.strptime(root.find('last_updated').text, '%a %b %d %H:%M:%S +0000 %Y')
+
+    def parseEpisodes(subscription, items):
+        episodes = []
+        for item in items:
+            guid = item.find('guid', namespaces=XML_NS)
+            if(guid is None):
+                continue;
+
+            episode, created = Episode.objects.get_or_create(subscription=subscription, guid=guid.text, defaults={
+                            'guid': guid.text, 'pub_date': datetime.now()})
+            # Need to make this work before uncommenting
+            #if created is False:
+                #break;
+
+            episode_title = item.find('title', namespaces=XML_NS)
+            episode.guid = guid.text
+            #enclosureUrl = models.CharField(max_length=255, null=True)
+            #enclosureLength = models.IntegerField(default=-1)
+            #enclosureType = models.CharField(max_length=30, null=True)
+            #itunes_author = models.CharField(max_length=100, null=True)
+            #itunes_block = models.BooleanField(default=False)
+            #itunes_duration = models.IntegerField(default=-1)
+            #itunes_explicit = models.BooleanField(default=False)
+            #itunes_image = models.CharField(max_length=255, null=True)
+            #itunes_explicit = models.BooleanField(default=False)
+            #itunes_subtitle = models.TextField(null=True)
+            #itunes_summary = models.TextField(null=True)
+            #pub_date = models.DateTimeField('Date published')
+
+            if episode_title is not None:
+                episode.title = episode_title.text
+            else:
+                episode.title = "Unknown"
+
+            #if episode_pubdate is not None:
+                #Parse pubDate
+
+            episodes.append(episode)
+
+        return episodes

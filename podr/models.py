@@ -27,11 +27,19 @@ class Subscription(models.Model):
 class Episode(models.Model):
     subscription = models.ForeignKey(Subscription)
     title = models.CharField(max_length=100)
-    pub_date = models.DateTimeField('Date published')
     guid = models.CharField(max_length=255, unique=True)
     enclosureUrl = models.CharField(max_length=255, null=True)
     enclosureLength = models.IntegerField(default=-1)
     enclosureType = models.CharField(max_length=30, null=True)
+    itunes_author = models.CharField(max_length=100, null=True)
+    itunes_block = models.BooleanField(default=False)
+    itunes_duration = models.IntegerField(default=-1)
+    itunes_explicit = models.BooleanField(default=False)
+    itunes_image = models.CharField(max_length=255, null=True)
+    itunes_explicit = models.BooleanField(default=False)
+    itunes_subtitle = models.TextField(null=True)
+    itunes_summary = models.TextField(null=True)
+    pub_date = models.DateTimeField('Date published')
 
     def __unicode__(self):
         return self.title

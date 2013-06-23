@@ -25,7 +25,9 @@ admin.site.register(Subscription, SubscriptionAdmin)
 
 class EpisodeAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None,               {'fields': ['title', 'subscription']}),
+        (None,               {'fields': ['subscription', 'episode_title', 'guid', 'enclosureUrl', 'enclosureLength', 'enclosureType']}),
+        ('iTunes information',  {'fields': ['itunes_author', 'itunes_subtitle', 'itunes_summary', 'itunes_duration',
+                                            'itunes_image', 'itunes_block', 'itunes_explicit'], 'classes': ['collapse']}),
         ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
     ]
     date_hierarchy = 'pub_date'
