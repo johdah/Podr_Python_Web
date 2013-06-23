@@ -34,7 +34,7 @@ class Episode(models.Model):
     itunes_author = models.CharField(max_length=100, null=True)
     itunes_block = models.BooleanField(default=False)
     itunes_duration = models.IntegerField(default=-1)
-    itunes_explicit = models.BooleanField(default=False)
+    itunes_itunesIsClosedCaption = models.BooleanField(default=False)
     itunes_image = models.CharField(max_length=255, null=True)
     itunes_explicit = models.BooleanField(default=False)
     itunes_subtitle = models.TextField(null=True)

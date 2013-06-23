@@ -1,9 +1,12 @@
 from datetime import datetime
 import urllib.request
 import xml.etree.ElementTree as ET
+from podr.utils import utils
 from podr.models import Episode
 
-XML_NS = {'itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd'}
+XML_NS = {
+    'itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd',
+    'media': 'http://search.yahoo.com/mrss/'}
 
 
 class iTunesFeedParser():
@@ -17,16 +20,11 @@ class iTunesFeedParser():
         items = list(root.iter("item"))
         episodes = iTunesFeedParser.parseEpisodes(subscription, items)
 
-        #return subscription
         return subscription, episodes
 
     @staticmethod
     def parseSubscription(subscription, root):
-        #response = urllib.request.urlopen(subscription.link)
-        #html = response.read().decode("utf8")
-
-        #root = ET.fromstring(html)[0]
-
+        #TODO: Keywords, category, image, itunes:new-feed-url, guid#isPermaLink
         subscription_title = root.find('title')
         subscription_copyright = root.find('copyright')
         subscription_description = root.find('description')
@@ -99,33 +97,68 @@ class iTunesFeedParser():
 
             episode, created = Episode.objects.get_or_create(subscription=subscription, guid=guid.text, defaults={
                             'guid': guid.text, 'pub_date': datetime.now()})
-            # Need to make this work before uncommenting
-            #if created is False:
-                #break;
+
+            if created is False:
+                break;
 
             episode_title = item.find('title', namespaces=XML_NS)
-            episode.guid = guid.text
-            #enclosureUrl = models.CharField(max_length=255, null=True)
-            #enclosureLength = models.IntegerField(default=-1)
-            #enclosureType = models.CharField(max_length=30, null=True)
-            #itunes_author = models.CharField(max_length=100, null=True)
-            #itunes_block = models.BooleanField(default=False)
-            #itunes_duration = models.IntegerField(default=-1)
-            #itunes_explicit = models.BooleanField(default=False)
-            #itunes_image = models.CharField(max_length=255, null=True)
-            #itunes_explicit = models.BooleanField(default=False)
-            #itunes_subtitle = models.TextField(null=True)
-            #itunes_summary = models.TextField(null=True)
-            #pub_date = models.DateTimeField('Date published')
+            episode_enclosure = item.find('enclosure', namespaces=XML_NS)
+            episode_itunes_author = item.find('itunes:author', namespaces=XML_NS)
+            episode_itunes_block = item.find('itunes:block', namespaces=XML_NS)
+            episode_itunes_duration = item.find('itunes:duration', namespaces=XML_NS)
+            episode_itunes_explicit = item.find('itunes:explicit', namespaces=XML_NS)
+            episode_itunes_image = item.find('itunes:image', namespaces=XML_NS)
+            episode_itunes_isClosedCaptioned = item.find('itunes:isClosedCaptioned', namespaces=XML_NS)
+            episode_itunes_subtitle = item.find('itunes:subtitle', namespaces=XML_NS)
+            episode_itunes_summary = item.find('itunes:summary', namespaces=XML_NS)
+            episode_media_thumbnail = item.find('media:thumbnail', namespaces=XML_NS) #sometimes used as a replacement for itunes:image
+            episode_pubDate = item.find('pubDate', namespaces=XML_NS)
 
             if episode_title is not None:
                 episode.title = episode_title.text
             else:
                 episode.title = "Unknown"
 
-            #if episode_pubdate is not None:
-                #Parse pubDate
+            if episode_enclosure is not None:
+                if episode_enclosure.attrib.get('length') is not None:
+                    episode.enclosureLength = episode_enclosure.attrib.get('length')
+                if episode_enclosure.attrib.get('type') is not None:
+                    episode.enclosureType = episode_enclosure.attrib.get('type')
+                if episode_enclosure.attrib.get('url') is not None:
+                    episode.enclosureUrl = episode_enclosure.attrib.get('url')
+
+            if episode_itunes_author is not None:
+                episode.itunes_author = episode_itunes_author.text
+
+            if episode_itunes_block is not None and episode_itunes_block.text == "yes":
+                episode.itunes_block = True
+
+            if episode_itunes_duration is not None:
+                episode.itunes_duration = utils.to_seconds(episode_itunes_duration.text)
+
+            if episode_itunes_explicit is not None and episode_itunes_explicit.text == "yes":
+                episode.itunes_explicit = True
+
+            if episode_itunes_image is not None and episode_itunes_image.attrib.get('href') is not None:
+                episode.itunes_image = episode_itunes_image.attrib.get('href')
+            else:
+                if episode_media_thumbnail is not None and episode_media_thumbnail.attrib.get('url') is not None:
+                    episode.itunes_image = episode_media_thumbnail.attrib.get('url')
+
+            if episode_itunes_isClosedCaptioned is not None and episode_itunes_isClosedCaptioned.text == "yes":
+                episode.itunes_isClosedCaptioned = True
+
+            if episode_itunes_subtitle is not None:
+                episode.itunes_subtitle = episode_itunes_subtitle.text
+
+            if episode_itunes_summary is not None:
+                episode.itunes_summary = episode_itunes_summary.text
+
+            if episode_pubDate is not None:
+                episode.pub_date = utils.getDatetime(episode_pubDate.text)
 
             episodes.append(episode)
 
         return episodes
+
+

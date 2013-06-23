@@ -41,6 +41,7 @@ def details(request, subscription_id):
     return render(request, 'subscription/details.html', {'subscription': subscription})
 
 
+## Todo: Add a check so that we only allow an update every 15 minutes
 def update(request, subscription_id):
     subscription = get_object_or_404(Subscription, pk=subscription_id)
     subscription, episodes = iTunesFeed.iTunesFeedParser.parse(subscription)
