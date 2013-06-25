@@ -9,5 +9,5 @@ urlpatterns = patterns('',
     # ex: /subscription/5/
     url(r'^(?P<subscription_id>\d+)/$', views.details, name='detail'),
     # ex: /subscription/5/
-    url(r'^(?P<subscription_id>\d+)/update/$', views.details, name='update'),
+    url(r'^(?P<subscription_id>\d+)/update/$', views.update, name='update'),
 )

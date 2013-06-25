@@ -7,7 +7,7 @@ DATE_FORMAT_CODES = ['%a, %d %b %Y %H:%M:%S %z', '%a, %d %b %Y %H:%M:%S %Z']
 def to_seconds(timestr):
     seconds= 0
     for part in timestr.split(':'):
-        seconds= seconds*60 + int(part)
+        seconds = seconds*60 + int(part)
     return seconds
 
 

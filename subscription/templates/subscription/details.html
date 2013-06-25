@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}PodR - {{ subscription.title }}{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -15,7 +18,7 @@
                     {% if subscription.itunes_image %}
                         <img src="{{ subscription.itunes_image }}" alt="" width="260">
                     {% else %}
-                        <img data-src="holder.js/240x240" alt="">
+                        <img data-src="{% static "podr/js/holder.js/240x240" %}" alt="">
                     {% endif %}
                 </a>
             </div>
@@ -73,11 +76,11 @@
                         <td>{{ episode.itunes_duration }}</td>
                         <td>{% if episode.pub_date %}{{ episode.pub_date|date:"Y-m-d H:i:s" }}{% endif %}</td>
                         {% if episode.itunes_subtitle %}
-                            <td>{{ episode.itunes_subtitle }}</td>
+                            <td>{{ episode.itunes_subtitle|truncatechars:60 }}</td>
                         {% elif episode.itunes_summary %}
-                            <td>{{ episode.itunes_summary }}</td>
+                            <td>{{ episode.itunes_summary|truncatechars:60 }}</td>
                         {% else %}
-                            <td>No description</td>
+                            <td>No description...</td>
                         {% endif %}
                         <td>{{ episode.itunes_explicit }}</td>
                     </tr>

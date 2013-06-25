@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block title %}PodR - {{ episode.title }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'subscription:index' %}{{ episode.subscription.id }}">{{ episode.subscription.title }}</a> <span class="divider">/</span></li>
+            <li class="active">{{ episode.title }}</li>
+        </ul>
+
+        <div class="row-fluid">
+            <div class="span3">
+                <div class="thumbnails span12">
+                    <a href="#" class="thumbnail">
+                        {% if episode.itunes_image %}
+                            <img src="{{ episode.itunes_image }}" alt="" width="260">
+                        {% else %}
+                            <img data-src="{% static "podr/js/holder.js/240x240" %}" alt="">
+                        {% endif %}
+                    </a>
+                </div>
+
+                <p class="muted">Rating</p>
+                {% if episode.itunes_explicit %}
+                    <p>Parental Advisory</p>
+                {% endif %}
+                <p>Language: {{ episode.subscription.language }}</p>
+                <p class="muted">Categories</p>
+                <h5>Author</h5>
+                <p><a href="mailto:{{ episode.itunes_owner_email }}">{{ episode.itunes_owner_name }}</a></p>
+                <p>{{ episode.subscription.copyright }}</p>
+            </div>
+            <div class="span9">
+                <h1>{{ episode.title }}</h1>
+
+                {% if episode.itunes_author %}
+                    <h4>{{ episode.subscription.title }} - {{ episode.itunes_author }}</h4>
+                {% elif episode.subscription.itunes_author %}
+                    <h4>{{ episode.subscription.title }} - {{ episode.subscription.itunes_author }}</h4>
+                {% else %}
+                    <h4>{{ episode.subscription.title }}</h4>
+                {% endif %}
+
+                <p><em>{{ episode.pub_date|naturaltime }}</em></p>
+
+                {% if episode.itunes_block %}
+                <p>This episode is marked as blocked by the author</p>
+                {% endif %}
+
+                {% if episode.itunes_itunesIsClosedCaption %}
+                <p>This episode is closed caption</p>
+                {% endif %}
+
+                <h4>Description</h4>
+                {% if episode.itunes_summary %}
+                    <p>{{ episode.itunes_summary|safe }}</p>
+                {% else %}
+                    <p>{{ episode.itunes_subtitle|safe }}</p>
+                {% endif %}
+
+                <hr />
+                <p><a href="{{ episode.enclosureUrl }}">{{ episode.enclosureUrl }}</a> ({{ episode.enclosureType }})</p>
+                <p>Duration: {{ episode.itunes_duration_as_string }}</p>
+
+                <ul class="record_actions">
+                    <li>
+                        <a href="{% url 'subscription:index' %}/{{ episode.subscription.id }}">
+                            Back to {{ episode.subscription.title }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
