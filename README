@@ -7,3 +7,5 @@ Python Libraries:
 
 - Pytz
 - python-dateutil (https://pypi.python.org/pypi/python-dateutil/) # Not used yet
+
+#- oauth2client (https://code.google.com/p/google-api-python-client)

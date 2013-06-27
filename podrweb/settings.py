@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.staticfiles',
     'podr',
+    'account',
     'episode',
     'subscription'
 )

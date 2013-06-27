@@ -30,15 +30,33 @@
             </a>
 
             <!-- Be sure to leave the brand out there if you want it shown -->
-            <a class="brand" href="#">PodR</a>
+            <a class="brand" href="{% url 'podr:index' %}">PodR</a>
 
             <!-- Everything you want hidden at 940px or less, place within here -->
             <div class="nav-collapse collapse">
+                {% if user.is_authenticated %}
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Logged in as {{ user.username }}
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><del>My Account/Profile</del></a></li>
+                            <li><a href="{% url 'account:logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                {% else %}
+                <p class="navbar-text pull-right">
+                    <a href="{% url 'account:login' %}" class="navbar-link">Login</a>
+                </p>
+                {% endif %}
                 <!-- .nav, .navbar-search, .navbar-form, etc -->
                 <ul class="nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
+                    <li class="active"><a href="{% url 'podr:index' %}">Home</a></li>
+                    <li><a href="{% url 'subscription:index' %}">Subscriptions</a></li>
+                    <li><a href="{% url 'episode:index' %}">Episodes</a></li>
                 </ul>
             </div>
         </div>
