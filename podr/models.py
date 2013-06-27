@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.db import models
 
 
-class Subscription(models.Model):
+class Podcast(models.Model):
     title = models.CharField(max_length=100, default="Unknown")
     link = models.CharField(max_length=255)
     copyright = models.CharField(max_length=100, null=True)
@@ -29,13 +29,13 @@ class Subscription(models.Model):
         return self.episode_set.order_by('-pub_date')
 
 
-class UserSubscription(models.Model):
+class UserPodcast(models.Model):
     user = models.ForeignKey(User)
-    subscription = models.ForeignKey(Subscription)
+    podcast = models.ForeignKey(Podcast)
 
 
 class Episode(models.Model):
-    subscription = models.ForeignKey(Subscription)
+    podcast = models.ForeignKey(Podcast)
     title = models.CharField(max_length=100)
     guid = models.CharField(max_length=255, unique=True)
     enclosureUrl = models.CharField(max_length=255, null=True)

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li class="active">Podcasts</li>
+    </ul>
+
+    {% if latest_podcast_list %}
+    <ul>
+        {% for podcast in latest_podcast_list %}
+            <li><a href="/podcast/{{ podcast.id }}/">{{ podcast.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No podcasts are available.</p>
+    {% endif %}
+
+    <h2>Add new podcast</h2>
+    <p>If you are missing a podcast. Please add it to the service.</p>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <form action="{% url 'podcast:add' %}" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+{% endblock %}

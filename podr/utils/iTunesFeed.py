@@ -10,29 +10,29 @@ XML_NS = {
 
 
 class iTunesFeedParser():
-    def parse(subscription):
-        response = urllib.request.urlopen(subscription.link)
+    def parse(podcast):
+        response = urllib.request.urlopen(podcast.link)
         html = response.read().decode("utf8")
 
         root = ET.fromstring(html)[0]
-        subscription = iTunesFeedParser.parseSubscription(subscription, root)
+        podcast = iTunesFeedParser.parseSubscription(podcast, root)
 
         items = list(root.iter("item"))
-        episodes = iTunesFeedParser.parseEpisodes(subscription, items)
+        episodes = iTunesFeedParser.parseEpisodes(podcast, items)
 
-        return subscription, episodes
+        return podcast, episodes
 
-    def parseChannel(subscription):
-        response = urllib.request.urlopen(subscription.link)
+    def parseChannel(podcast):
+        response = urllib.request.urlopen(podcast.link)
         html = response.read().decode("utf8")
 
         root = ET.fromstring(html)[0]
-        subscription = iTunesFeedParser.parseSubscription(subscription, root)
+        podcast = iTunesFeedParser.parseSubscription(podcast, root)
 
-        return subscription
+        return podcast
 
     @staticmethod
-    def parseSubscription(subscription, root):
+    def parseSubscription(podcast, root):
         #TODO: Keywords, category, image, itunes:new-feed-url, guid#isPermaLink
         subscription_title = root.find('title')
         subscription_copyright = root.find('copyright')
@@ -52,59 +52,59 @@ class iTunesFeedParser():
             subscription_itunes_owner_name = subscription_itunes_owner.find('itunes:name', namespaces=XML_NS)
 
         if subscription_title is not None:
-            subscription.title = subscription_title.text
+            podcast.title = subscription_title.text
         else:
-            subscription.title = "Unknown"
+            podcast.title = "Unknown"
 
         if subscription_copyright is not None:
-            subscription.copyright = subscription_copyright.text
+            podcast.copyright = subscription_copyright.text
 
         if subscription_description is not None:
-            subscription.description = subscription_description.text
+            podcast.description = subscription_description.text
 
         if subscription_language is not None:
-            subscription.language = subscription_language.text
+            podcast.language = subscription_language.text
 
         if subscription_itunes_author is not None:
-            subscription.itunes_author = subscription_itunes_author.text
+            podcast.itunes_author = subscription_itunes_author.text
 
         if subscription_itunes_block is not None and subscription_itunes_block.text == "yes":
-            subscription.itunes_block = True
+            podcast.itunes_block = True
 
         if subscription_itunes_complete is not None and subscription_itunes_complete.text == "yes":
-            subscription.itunes_complete = True
+            podcast.itunes_complete = True
 
         if subscription_itunes_explicit is not None and subscription_itunes_explicit.text == "yes":
-            subscription.itunes_explicit = True
+            podcast.itunes_explicit = True
 
         if subscription_itunes_image is not None and subscription_itunes_image.attrib.get('href') is not None:
-            subscription.itunes_image = subscription_itunes_image.attrib.get('href')
+            podcast.itunes_image = subscription_itunes_image.attrib.get('href')
 
         if subscription_itunes_owner_email is not None:
-            subscription.itunes_owner_email = subscription_itunes_owner_email.text
+            podcast.itunes_owner_email = subscription_itunes_owner_email.text
 
         if subscription_itunes_owner_name is not None:
-            subscription.itunes_owner_name = subscription_itunes_owner_name.text
+            podcast.itunes_owner_name = subscription_itunes_owner_name.text
 
         if subscription_itunes_subtitle is not None:
-            subscription.itunes_subtitle = subscription_itunes_subtitle.text
+            podcast.itunes_subtitle = subscription_itunes_subtitle.text
 
         if subscription_itunes_summary is not None:
-            subscription.itunes_summary = subscription_itunes_summary.text
+            podcast.itunes_summary = subscription_itunes_summary.text
 
-        subscription.last_updated = datetime.now()
+        podcast.last_updated = datetime.now()
 
-        return subscription
+        return podcast
 
 
-    def parseEpisodes(subscription, items):
+    def parseEpisodes(podcast, items):
         episodes = []
         for item in items:
             guid = item.find('guid', namespaces=XML_NS)
             if guid is None:
                 continue
 
-            episode, created = Episode.objects.get_or_create(subscription=subscription, guid=guid.text, defaults={
+            episode, created = Episode.objects.get_or_create(podcast=podcast, guid=guid.text, defaults={
                             'guid': guid.text, 'pub_date': datetime.now()})
 
             if created is False:

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from podr.models import Subscription, Episode, UserSubscription, UserEpisode
+from podr.models import Podcast, Episode, UserPodcast, UserEpisode
 
 
 class EpisodeInline(admin.TabularInline):
@@ -20,7 +20,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ('title', 'last_updated')
     search_fields = ['title']
 
-admin.site.register(Subscription, SubscriptionAdmin)
+admin.site.register(Podcast, SubscriptionAdmin)
 
 
 class EpisodeAdmin(admin.ModelAdmin):
@@ -37,5 +37,5 @@ class EpisodeAdmin(admin.ModelAdmin):
 
 admin.site.register(Episode, EpisodeAdmin)
 
-admin.site.register(UserSubscription)
+admin.site.register(UserPodcast)
 admin.site.register(UserEpisode)

@@ -40,7 +40,7 @@ INSTALLED_APPS = (
     'podr',
     'account',
     'episode',
-    'subscription'
+    'podcast'
 )
 
 MIDDLEWARE_CLASSES = (

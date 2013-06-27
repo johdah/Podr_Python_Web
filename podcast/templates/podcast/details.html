@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}PodR - {{ subscription.title }}{% endblock %}
+{% block title %}PodR - {{ podcast.title }}{% endblock %}
 
 {% block content %}
 <div class="container">
     <ul class="breadcrumb">
         <li><a href="/">Home</a> <span class="divider">/</span></li>
-        <li><a href="{% url 'subscription:index' %}">Subscriptions</a> <span class="divider">/</span></li>
-        <li class="active">{{ subscription.title }}</li>
+        <li><a href="{% url 'podcast:index' %}">Podcats</a> <span class="divider">/</span></li>
+        <li class="active">{{ podcast.title }}</li>
     </ul>
 
     <div class="row-fluid">
         <div class="span3">
             <div class="thumbnails span12">
                 <a href="#" class="thumbnail">
-                    {% if subscription.itunes_image %}
-                        <img src="{{ subscription.itunes_image }}" alt="" width="260">
+                    {% if podcast.itunes_image %}
+                        <img src="{{ podcast.itunes_image }}" alt="" width="260">
                     {% else %}
                         <img data-src="{% static "podr/js/holder.js/240x240" %}" alt="">
                     {% endif %}
@@ -24,30 +24,30 @@
             </div>
 
             <p class="muted">Rating</p>
-            {% if subscription.itunes_explicit %}
+            {% if podcast.itunes_explicit %}
                 <p>Parental Advisory</p>
             {% endif %}
-            <p>{{ subscription.language }}</p>
+            <p>{{ podcast.language }}</p>
             <p class="muted">Categories</p>
-            <p><a href="mailto:{{ subscription.itunes_owner_email }}">{{ subscription.itunes_owner_name }}</a></p>
-            <p>Last updated: {{ subscription.last_updated|date:"Y-m-d H:i:s" }}</p>
-            <p>{{ subscription.copyright }}</p>
+            <p><a href="mailto:{{ podcast.itunes_owner_email }}">{{ podcast.itunes_owner_name }}</a></p>
+            <p>Last updated: {{ podcast.last_updated|date:"Y-m-d H:i:s" }}</p>
+            <p>{{ podcast.copyright }}</p>
 
             <h5>Links</h5>
-            <p class="muted"><a href="{{ subscription.link }}">Feed</a></p>
+            <p class="muted"><a href="{{ podcast.link }}">Feed</a></p>
         </div>
         <div class="span9">
-            <h1>{{ subscription.title }}</h1>
-            <h4>{{ subscription.itunes_author }}</h4>
+            <h1>{{ podcast.title }}</h1>
+            <h4>{{ podcast.itunes_author }}</h4>
 
             <h4>Description</h4>
-            {% if subscription.itunes_summary %}
-                <p>{{ subscription.itunes_summary }}</p>
+            {% if podcast.itunes_summary %}
+                <p>{{ podcast.itunes_summary }}</p>
             {% else %}
-                <p>{{ subscription.description }}</p>
+                <p>{{ podcast.description }}</p>
             {% endif %}
 
-            {% if subscription.itunes_complete %}
+            {% if podcast.itunes_complete %}
                 <div class="alert alert-info">
                     This podcast is discontinued
                 </div>
@@ -69,7 +69,7 @@
                 </thead>
                 <tbody>
 
-                {% for episode in subscription.sorted_episode_set.all  %}
+                {% for episode in podcast.sorted_episode_set.all  %}
                     <tr>
                         <td><a href="/episode/{{ episode.id }}/">{{ episode.id }}</a></td>
                         <td>{{ episode.title }}</td>
@@ -90,8 +90,8 @@
 
             <ul class="record_actions">
                 <li>
-                    <a href="{% url 'subscription:index' %}">
-                        Back to subscription list
+                    <a href="{% url 'podcast:index' %}">
+                        Back to podcast list
                     </a>
                 </li>
             </ul>
