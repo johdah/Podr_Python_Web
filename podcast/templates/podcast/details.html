@@ -18,16 +18,16 @@
                     {% if podcast.itunes_image %}
                         <img src="{{ podcast.itunes_image }}" alt="" width="260">
                     {% else %}
-                        <img data-src="{% static "podr/js/holder.js/240x240" %}" alt="">
+                        <img data-src="{% static "podr/js/holder.js/260x260" %}" alt="">
                     {% endif %}
                 </a>
             </div>
             <p>
                 {% if is_following %}
-                <a href="{% url 'podcast:unfollow' podcast.id %}"><button class="btn btn-danger" type="button">Unfollow</button></a>
-                <a href="{% url 'podcast:update' podcast.id %}"><button class="btn btn-inverse" type="button">Update</button></a>
+                    <a href="{% url 'podcast:unfollow' podcast.id %}"><button class="btn btn-danger" type="button">Unfollow</button></a>
+                    <a href="{% url 'podcast:update' podcast.id %}"><button class="btn btn-inverse" type="button">Update</button></a>
                 {% else %}
-                <a href="{% url 'podcast:follow' podcast.id %}"><button class="btn btn-success" type="button">Follow</button></a>
+                    <a href="{% url 'podcast:follow' podcast.id %}"><button class="btn btn-success" type="button">Follow</button></a>
                 {% endif %}
             </p>
 

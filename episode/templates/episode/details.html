@@ -8,21 +8,32 @@
     <div class="container">
         <ul class="breadcrumb">
             <li><a href="/">Home</a> <span class="divider">/</span></li>
-            <li><a href="{% url 'podcast:details' podcast.id %}">{{ episode.podcast.title }}</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'podcast:details' episode.podcast.id %}">{{ episode.podcast.title }}</a> <span class="divider">/</span></li>
             <li class="active">{{ episode.title }}</li>
         </ul>
 
         <div class="row-fluid">
             <div class="span3">
-                <div class="thumbnails span12">
+                <div class="itunes-image thumbnails span12">
                     <a href="#" class="thumbnail">
                         {% if episode.itunes_image %}
                             <img src="{{ episode.itunes_image }}" alt="" width="260">
+                        {% elif episode.podcast.itunes_image %}
+                            <img src="{{ episode.podcast.itunes_image }}" alt="" width="260">
                         {% else %}
                             <img data-src="{% static "podr/js/holder.js/240x240" %}" alt="">
                         {% endif %}
                     </a>
                 </div>
+                <p>
+                    {% if user_episode and user_episode.archived %}
+                        <a href="{% url 'episode:unarchive' episode.id %}"><button class="btn btn-success" type="button">Unarchive</button></a>
+                    {% elif user_episode and not user_episode.archived %}
+                        <a href="{% url 'episode:archive' episode.id %}"><button class="btn btn-danger" type="button">Archive</button></a>
+                    {% else %}
+                        <a href="{% url 'episode:unarchive' episode.id %}"><button class="btn btn-success" type="button">Add</button></a>
+                    {% endif %}
+                </p>
 
                 <p class="muted">Rating</p>
                 {% if episode.itunes_explicit %}

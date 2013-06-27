@@ -32,7 +32,7 @@ def add(request):
     podcast = iTunesFeed.iTunesFeedParser.parseChannel(podcast)
     podcast.save()
 
-    return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast_id}))
+    return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast.id}))
 
 
 def details(request, podcast_id):
