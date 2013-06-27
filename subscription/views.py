@@ -2,7 +2,7 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
-from podr.models import Subscription
+from podr.models import Subscription, UserSubscription, UserEpisode
 from podr.utils import iTunesFeed
 
 
@@ -26,11 +26,8 @@ def index(request):
 def add(request):
     subscription, created = Subscription.objects.get_or_create(link=request.POST['link'], defaults={'link': request.POST['link']})
 
-    subscription, episodes = iTunesFeed.iTunesFeedParser.parse(subscription)
+    subscription = iTunesFeed.iTunesFeedParser.parseChannel(subscription)
     subscription.save()
-
-    for episode in episodes:
-        episode.save()
 
     return HttpResponseRedirect('/subscription/%i/' % subscription.id)
     #return HttpResponseRedirect(reverse('subscription:details', args=(subscription.id,)))
@@ -47,7 +44,12 @@ def update(request, subscription_id):
     subscription, episodes = iTunesFeed.iTunesFeedParser.parse(subscription)
     subscription.save()
 
+    userSubscriptions = UserSubscription.objects.all().filter(subscription=subscription_id)
+
     for episode in episodes:
         episode.save()
+        for userSubscription in userSubscriptions:
+            userEpisode = UserEpisode(episode=episode, user=userSubscription.user)
+            userEpisode.save()
 
     return HttpResponseRedirect('/subscription/%i/' % subscription.id)

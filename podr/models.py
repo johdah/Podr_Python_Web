@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db import models
 
@@ -22,6 +23,15 @@ class Subscription(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    @property
+    def sorted_episode_set(self):
+        return self.episode_set.order_by('-pub_date')
+
+
+class UserSubscription(models.Model):
+    user = models.ForeignKey(User)
+    subscription = models.ForeignKey(Subscription)
 
 
 class Episode(models.Model):
@@ -52,3 +62,17 @@ class Episode(models.Model):
 
     def itunes_duration_as_string(self):
         return str(timedelta(seconds=self.itunes_duration))
+
+
+class UserEpisode(models.Model):
+    PLAYING_UNPLAYED, PLAYING_PARTIALLY, PLAYING_FINISHED = range(0, 3)
+    PlayingStatus = (
+        (PLAYING_UNPLAYED, 'Unplayed'),
+        (PLAYING_PARTIALLY, 'Partially played'),
+        (PLAYING_FINISHED, 'Finished'),
+    )
+
+    user = models.ForeignKey(User)
+    episode = models.ForeignKey(Episode)
+    archived = models.BooleanField(default=False)
+    playing_status = models.IntegerField(choices=PlayingStatus, default=PLAYING_UNPLAYED)

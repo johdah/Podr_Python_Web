@@ -22,6 +22,15 @@ class iTunesFeedParser():
 
         return subscription, episodes
 
+    def parseChannel(subscription):
+        response = urllib.request.urlopen(subscription.link)
+        html = response.read().decode("utf8")
+
+        root = ET.fromstring(html)[0]
+        subscription = iTunesFeedParser.parseSubscription(subscription, root)
+
+        return subscription
+
     @staticmethod
     def parseSubscription(subscription, root):
         #TODO: Keywords, category, image, itunes:new-feed-url, guid#isPermaLink
@@ -92,14 +101,14 @@ class iTunesFeedParser():
         episodes = []
         for item in items:
             guid = item.find('guid', namespaces=XML_NS)
-            if(guid is None):
-                continue;
+            if guid is None:
+                continue
 
             episode, created = Episode.objects.get_or_create(subscription=subscription, guid=guid.text, defaults={
                             'guid': guid.text, 'pub_date': datetime.now()})
 
             if created is False:
-                break;
+                break
 
             episode_title = item.find('title', namespaces=XML_NS)
             episode_enclosure = item.find('enclosure', namespaces=XML_NS)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from podr.models import Subscription, Episode
+from podr.models import Subscription, Episode, UserSubscription, UserEpisode
 
 
 class EpisodeInline(admin.TabularInline):
@@ -36,3 +36,6 @@ class EpisodeAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 admin.site.register(Episode, EpisodeAdmin)
+
+admin.site.register(UserSubscription)
+admin.site.register(UserEpisode)

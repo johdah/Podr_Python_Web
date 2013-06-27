@@ -3,7 +3,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
-import account
 
 
 class LoginForm(forms.Form):
@@ -19,19 +18,6 @@ def index(request):
     return render(request, 'account/index.html')
 
 
-#def authenticate(request):
-    #user = authenticate(username='john', password='secret')
-    #if user is not None:
-        # the password verified for the user
-        #if user.is_active:
-            #print("User is valid, active and authenticated")
-        #else:
-            #print("The password is valid, but the account has been disabled!")
-    #else:
-        # the authentication system was unable to verify the username and password
-        #print("The username and password were incorrect.")
-
-
 #def change_password(request):
     #u = User.objects.get(username__exact='john')
     #u.set_password('new password')
@@ -40,6 +26,9 @@ def index(request):
 
 # TODO: Add view
 def login_view(request):
+    form = LoginForm()
+    errors = []
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -51,15 +40,12 @@ def login_view(request):
                 return redirect(reverse('account:index'))
                 #return HttpResponseRedirect(reverse(account.views.index))
             else:
-            # Return a 'disabled account' error message
-                return render(request, 'account/index.html')
+                errors.append("Disabled account")
         else:
-            # Return an 'invalid login' error message.
-            return render(request, 'account/index.html')
-    else:
-        form = LoginForm()
+            errors.append("Invalid login")
 
     return render(request, 'account/login.html', {
+        'errors': errors,
         'form': form,
     })
 
@@ -70,7 +56,7 @@ def logout_view(request):
     return redirect(reverse('podr:index'))
 
 
-#def create(request):
+#def register(request):
     #if valid input and user doesn't exist
         #user = User.objects.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
 

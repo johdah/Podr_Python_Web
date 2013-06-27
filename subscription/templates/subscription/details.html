@@ -69,7 +69,7 @@
                 </thead>
                 <tbody>
 
-                {% for episode in subscription.episode_set.all %}
+                {% for episode in subscription.sorted_episode_set.all  %}
                     <tr>
                         <td><a href="/episode/{{ episode.id }}/">{{ episode.id }}</a></td>
                         <td>{{ episode.title }}</td>
