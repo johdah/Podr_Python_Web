@@ -8,7 +8,7 @@
     <div class="container">
         <ul class="breadcrumb">
             <li><a href="/">Home</a> <span class="divider">/</span></li>
-            <li><a href="{% url 'podcast:index' %}{{ episode.podcast.id }}">{{ episode.podcast.title }}</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'podcast:details' podcast.id %}">{{ episode.podcast.title }}</a> <span class="divider">/</span></li>
             <li class="active">{{ episode.title }}</li>
         </ul>
 
@@ -68,7 +68,7 @@
 
                 <ul class="record_actions">
                     <li>
-                        <a href="{% url 'podcast:index' %}/{{ episode.podcast.id }}">
+                        <a href="{% url 'podcast:details' episode.podcast.id %}">
                             Back to {{ episode.podcast.title }}
                         </a>
                     </li>

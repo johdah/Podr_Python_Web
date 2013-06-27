@@ -38,7 +38,6 @@ def login_view(request):
                 login(request, user)
                 # Redirect to a success page.
                 return redirect(reverse('account:index'))
-                #return HttpResponseRedirect(reverse(account.views.index))
             else:
                 errors.append("Disabled account")
         else:
@@ -51,6 +50,7 @@ def login_view(request):
 
 
 # TODO: Finish
+@login_required(login_url='/account/login/')
 def logout_view(request):
     logout(request)
     return redirect(reverse('podr:index'))

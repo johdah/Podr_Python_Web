@@ -10,7 +10,7 @@
         {% if latest_episode_list %}
             <ul>
                 {% for episode in latest_episode_list %}
-                    <li><a href="/episode/{{ episode.id }}/">{{ episode.title }}</a></li>
+                    <li><a href="{% url 'episode:details' episode.id %}">{{ episode.title }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}

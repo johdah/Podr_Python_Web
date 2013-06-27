@@ -1,17 +1,34 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block content %}
 <div class="container">
     <ul class="breadcrumb">
-        <li><a href="/">Home</a> <span class="divider">/</span></li>
+        <li><a href="{% url 'podr:index' %}">Home</a> <span class="divider">/</span></li>
         <li class="active">Podcasts</li>
     </ul>
 
     {% if latest_podcast_list %}
-    <ul>
-        {% for podcast in latest_podcast_list %}
-            <li><a href="/podcast/{{ podcast.id }}/">{{ podcast.title }}</a></li>
-        {% endfor %}
+    <ul class="thumbnails">
+    {% for podcast in latest_podcast_list %}
+        <li class="span3">
+            <div class="subscription-thumbnail-list thumbnail">
+                {% if podcast.itunes_image %}
+                    <img src="{{ podcast.itunes_image }}" alt="" width="260">
+                {% else %}
+                    <img data-src="{% static "podr/js/holder.js/260x180" %}" alt="">
+                {% endif %}
+                <h3><a href="{% url 'podcast:details' podcast.id %}">{{ podcast.title }}</a></h3>
+                {% if podcast.itunes_subtitle %}
+                    <p>{{ podcast.itunes_subtitle|truncatechars:120 }}</p>
+                {% elif podcast.itunes_summary %}
+                    <p>{{ podcast.itunes_summary|truncatechars:120 }}</p>
+                {% else %}
+                    <p>No description...</p>
+                {% endif %}
+            </div>
+        </li>
+    {% endfor %}
     </ul>
     {% else %}
     <p>No podcasts are available.</p>

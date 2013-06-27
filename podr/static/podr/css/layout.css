@@ -1,3 +1,14 @@
 .breadcrumb {
     margin-top: 20px;
 }
+
+.itunes-image {
+    margin-bottom: 20px;
+}
+
+.subscription-thumbnail-list {
+    height: 425px;
+}
+    .subscription-thumbnail-list h3 a {
+        color: #333;
+    }

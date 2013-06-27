@@ -7,13 +7,13 @@
 <div class="container">
     <ul class="breadcrumb">
         <li><a href="/">Home</a> <span class="divider">/</span></li>
-        <li><a href="{% url 'podcast:index' %}">Podcats</a> <span class="divider">/</span></li>
+        <li><a href="{% url 'podcast:index' %}">Podcast</a> <span class="divider">/</span></li>
         <li class="active">{{ podcast.title }}</li>
     </ul>
 
     <div class="row-fluid">
         <div class="span3">
-            <div class="thumbnails span12">
+            <div class="itunes-image thumbnails span12">
                 <a href="#" class="thumbnail">
                     {% if podcast.itunes_image %}
                         <img src="{{ podcast.itunes_image }}" alt="" width="260">
@@ -22,6 +22,14 @@
                     {% endif %}
                 </a>
             </div>
+            <p>
+                {% if is_following %}
+                <a href="{% url 'podcast:unfollow' podcast.id %}"><button class="btn btn-danger" type="button">Unfollow</button></a>
+                <a href="{% url 'podcast:update' podcast.id %}"><button class="btn btn-inverse" type="button">Update</button></a>
+                {% else %}
+                <a href="{% url 'podcast:follow' podcast.id %}"><button class="btn btn-success" type="button">Follow</button></a>
+                {% endif %}
+            </p>
 
             <p class="muted">Rating</p>
             {% if podcast.itunes_explicit %}
@@ -59,7 +67,6 @@
                 <caption>...</caption>
                 <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Title</th>
                     <th>Duration</th>
                     <th>Published</th>
@@ -71,8 +78,7 @@
 
                 {% for episode in podcast.sorted_episode_set.all  %}
                     <tr>
-                        <td><a href="/episode/{{ episode.id }}/">{{ episode.id }}</a></td>
-                        <td>{{ episode.title }}</td>
+                        <td><a href="{% url 'episode:details' episode.id %}">{{ episode.title }}</a></td>
                         <td>{{ episode.itunes_duration }}</td>
                         <td>{% if episode.pub_date %}{{ episode.pub_date|date:"Y-m-d H:i:s" }}{% endif %}</td>
                         {% if episode.itunes_subtitle %}
