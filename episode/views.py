@@ -4,10 +4,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from podr.models import Episode, UserEpisode, UserPodcast
 
 
+@login_required(login_url='/account/login/')
 def index(request):
-    latest_episode_list = Episode.objects.order_by('-title')#[:5]
+    latest_user_episode_list = UserEpisode.objects.filter(user=request.user.id, archived=False).order_by("-episode__pub_date")
     context = {
-        'latest_episode_list': latest_episode_list,
+        'latest_user_episode_list': latest_user_episode_list,
     }
     return render(request, 'episode/index.html', context)
 

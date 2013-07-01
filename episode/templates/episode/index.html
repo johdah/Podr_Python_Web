@@ -7,14 +7,33 @@
             <li class="active">Episodes</li>
         </ul>
 
-        {% if latest_episode_list %}
-            <ul>
-                {% for episode in latest_episode_list %}
-                    <li><a href="{% url 'episode:details' episode.id %}">{{ episode.title }}</a></li>
-                {% endfor %}
-            </ul>
+        <h1>Episodes</h1>
+
+        {% if latest_user_episode_list %}
+        <table class="records_list table table-striped">
+            <caption>All unarchived episodes</caption>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Subscription</th>
+                <th>Published</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for user_episode in latest_user_episode_list %}
+                <tr>
+                    <td><a href="{% url 'episode:details' user_episode.episode.id %}">{{ user_episode.episode.title }}</a></td>
+                    <td><a href="{% url 'podcast:details' user_episode.episode.podcast.id %}">{{ user_episode.episode.podcast.title }}</a></td>
+                    <td>{% if user_episode.episode.pub_date %}{{ user_episode.episode.pub_date|date:"Y-m-d H:i:s" }}{% endif %}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
         {% else %}
-            <p>No episodes are available.</p>
+        <p>No episodes are available.</p>
         {% endif %}
     </div>
 {% endblock %}
