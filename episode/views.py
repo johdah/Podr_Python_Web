@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from podr.models import Episode, UserEpisode, UserPodcast
@@ -7,8 +8,21 @@ from podr.models import Episode, UserEpisode, UserPodcast
 @login_required(login_url='/account/login/')
 def index(request):
     latest_user_episode_list = UserEpisode.objects.filter(user=request.user.id, archived=False).order_by("-episode__pub_date")
+
+    paginator = Paginator(latest_user_episode_list, 50) # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        episodes = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        episodes = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        episodes = paginator.page(paginator.num_pages)
+
     context = {
-        'latest_user_episode_list': latest_user_episode_list,
+        'episodes': episodes,
     }
     return render(request, 'episode/index.html', context)
 

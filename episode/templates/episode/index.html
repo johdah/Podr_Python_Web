@@ -9,7 +9,7 @@
 
         <h1>Episodes</h1>
 
-        {% if latest_user_episode_list %}
+        {% if episodes %}
         <table class="records_list table table-striped">
             <caption>All unarchived episodes</caption>
             <thead>
@@ -22,7 +22,7 @@
             </thead>
             <tbody>
 
-            {% for user_episode in latest_user_episode_list %}
+            {% for user_episode in episodes %}
                 <tr>
                     <td><a href="{% url 'episode:details' user_episode.episode.id %}">{{ user_episode.episode.title }}</a></td>
                     <td><a href="{% url 'podcast:details' user_episode.episode.podcast.id %}">{{ user_episode.episode.podcast.title }}</a></td>
@@ -32,6 +32,24 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <ul class="pager">
+            {% if episodes.has_previous %}
+                <li class="previous"><a href="?page={{ episodes.previous_page_number }}">&larr; Older</a></li>
+            {% else %}
+                <li class="previous disabled">&larr; Older</li>
+            {% endif %}
+
+            <span class="current">
+                Page {{ episodes.number }} of {{ episodes.paginator.num_pages }}.
+            </span>
+
+            {% if episodes.has_next %}
+                <li class="next"><a href="?page={{ episodes.next_page_number }}">Newer &rarr;</a></li>
+            {% else %}
+                <li class="next disabled">Newer &rarr;</li>
+            {% endif %}
+        </ul>
         {% else %}
         <p>No episodes are available.</p>
         {% endif %}

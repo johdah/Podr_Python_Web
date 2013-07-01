@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -39,7 +40,19 @@ def details(request, podcast_id):
     podcast = get_object_or_404(Podcast, pk=podcast_id)
     is_following = UserPodcast.objects.filter(podcast=podcast_id, user=request.user.id).exists()
 
-    return render(request, 'podcast/details.html', {'podcast': podcast, 'is_following': is_following})
+    paginator = Paginator(podcast.sorted_episode_set, 50) # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        episodes = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        episodes = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        episodes = paginator.page(paginator.num_pages)
+
+    return render(request, 'podcast/details.html', {'podcast': podcast, 'is_following': is_following, 'episodes': episodes})
 
 
 @login_required(login_url='/account/login/')
