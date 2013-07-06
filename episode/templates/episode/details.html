@@ -46,7 +46,9 @@
                 <p>{{ episode.subscription.copyright }}</p>
             </div>
             <div class="span9">
-                <h1 id="episode_title">{{ episode.title }} <small id="episode_id">{{ episode.id }}</small></h1>
+                <div class="page-header">
+                    <h1><span id="episode_title">{{ episode.title }}</span> <small id="episode_id">{{ episode.id }}</small></h1>
+                </div>
 
                 {% if episode.itunes_author %}
                     <h4>{{ episode.subscription.title }} - {{ episode.itunes_author }}</h4>

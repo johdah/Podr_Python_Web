@@ -12,3 +12,6 @@
 *.pot
 *.pyc
 local_settings.py
+
+## Temporary files for debugging when offline
+*.mp3
