@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ user.username }}</h1>
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a> <span class="divider">/</span></li>
+            <li class="active">{{ user.username }}</li>
+        </ul>
+
+        <h1>{{ user.username }}</h1>
+    </div>
 {% endblock %}
