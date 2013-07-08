@@ -2,13 +2,18 @@ from rest_framework import serializers
 from podr.models import Episode, Podcast
 
 
-# TODO: Not working
+# TODO: User specific
 class EpisodeSerializer(serializers.HyperlinkedModelSerializer):
+    podcast = serializers.Field(source='podcast.id')
+
     class Meta:
         model = Episode
-        fields = ('title', 'podcasts', 'guid', 'enclosureUrl', 'enclosureType', 'enclosureLength')
+        fields = ('title', 'podcast', 'guid', 'enclosureUrl', 'enclosureType', 'enclosureLength', 'itunes_author',
+                  'itunes_block', 'itunes_duration', 'itunes_itunesIsClosedCaption', 'itunes_image', 'itunes_explicit',
+                  'itunes_subtitle', 'itunes_summary', 'pub_date')
 
 
+# TODO: User specific
 class PodcastSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Podcast
