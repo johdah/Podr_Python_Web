@@ -8,6 +8,7 @@ from rest_framework.decorators import  api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.views import APIView
 from api.serializers import EpisodeSerializer, PodcastSerializer, UserEpisodeSerializer, UserPodcastSerializer
 from podr.models import Episode, Podcast, UserPodcast, UserEpisode
 
@@ -18,14 +19,15 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
-@api_view(('GET',))
-def api_root(request, format=None):
-    return Response({
-        'episodes': reverse('episode-list', request=request, format=format),
-        'podcasts': reverse('podcast-list', request=request, format=format),
-        'userepisodes': reverse('user-episode-list', request=request, format=format),
-        'userpodcasts': reverse('user-podcast-list', request=request, format=format)
-    })
+class APIRootView(APIView):
+    def get(self, request):
+        data = {
+            'episodes': reverse('episode-list', request=request, format=format),
+            'podcasts': reverse('podcast-list', request=request, format=format),
+            'userepisodes': reverse('user-episode-list', request=request, format=format),
+            'userpodcasts': reverse('user-podcast-list', request=request, format=format)
+        }
+        return Response(data)
 
 
 class EpisodeViewSet(viewsets.ReadOnlyModelViewSet):
@@ -55,7 +57,7 @@ class UserEpisodeViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         userObj = self.request.user
-        return UserEpisode.objects.all().filter(user=userObj)
+        return UserEpisode.objects.filter(user=userObj)
 
 
 class UserPodcastViewSet(viewsets.ReadOnlyModelViewSet):
@@ -66,4 +68,4 @@ class UserPodcastViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         userObj = self.request.user
-        return UserPodcast.objects.all().filter(user=userObj)
+        return UserPodcast.objects.filter(user=userObj)
