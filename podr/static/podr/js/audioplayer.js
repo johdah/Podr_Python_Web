@@ -71,7 +71,8 @@ function loadPlayerState() {
 
         $("#audio-player-container").bind($.jPlayer.event.canplaythrough, function() {
             //$("#audio-player-container").jPlayer("play", localStorage[PODR_ENCLOSURE_TIME]);
-            $("#audio-player-container").jPlayer("play");
+            // TODO: Autoplay disabled
+            //$("#audio-player-container").jPlayer("play");
             console.log("Loading enclosure time: " + localStorage[PODR_ENCLOSURE_TIME]);
             $('#playing_episode_title').text(localStorage[PODR_EPISODE_TITLE]);
         });
