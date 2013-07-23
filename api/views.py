@@ -1,16 +1,15 @@
 from django.contrib.auth.models import User
-from django.core.context_processors import request
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from rest_framework import viewsets, renderers
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework import viewsets
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import link, api_view, authentication_classes, permission_classes
+from rest_framework.decorators import  api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from api.serializers import EpisodeSerializer, PodcastSerializer
-from podr.models import Episode, Podcast
+from api.serializers import EpisodeSerializer, PodcastSerializer, UserEpisodeSerializer, UserPodcastSerializer
+from podr.models import Episode, Podcast, UserPodcast, UserEpisode
 
 
 @receiver(post_save, sender=User)
@@ -23,7 +22,9 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 def api_root(request, format=None):
     return Response({
         'episodes': reverse('episode-list', request=request, format=format),
-        'podcasts': reverse('podcast-list', request=request, format=format)
+        'podcasts': reverse('podcast-list', request=request, format=format),
+        'userepisodes': reverse('user-episode-list', request=request, format=format),
+        'userpodcasts': reverse('user-podcast-list', request=request, format=format)
     })
 
 
@@ -46,6 +47,23 @@ class PodcastViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PodcastSerializer
 
 
-# TODO: User specific
-#class UserPodcast_view(request, format=None):
-    #return Response(content)
+class UserEpisodeViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = (TokenAuthentication,SessionAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = UserEpisodeSerializer
+
+    def get_queryset(self):
+        userObj = self.request.user
+        return UserEpisode.objects.all().filter(user=userObj)
+
+
+class UserPodcastViewSet(viewsets.ReadOnlyModelViewSet):
+    authentication_classes = (TokenAuthentication,SessionAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    serializer_class = UserPodcastSerializer
+
+    def get_queryset(self):
+        userObj = self.request.user
+        return UserPodcast.objects.all().filter(user=userObj)
