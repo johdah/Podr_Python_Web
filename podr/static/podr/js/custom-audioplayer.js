@@ -17,12 +17,11 @@ jQuery(document).ready(function(){
     close = $('#player-controls #close');
     playerAudioElement = new Audio();
 
-    playerAudioElement.type= localStorage[PODR_ENCLOSURE_TYPE];
-    playerAudioElement.src= localStorage[PODR_ENCLOSURE_URL];
-    duration = playerAudioElement.duration;
+    loadPlayerState();
 
-    // TODO: Turn autoplay off
-    playerAudioElement.play();
+    setInterval(function() {
+        savePlayerState();
+    });
 
 
     play.live('click', function(e) {
@@ -113,7 +112,9 @@ jQuery(document).ready(function(){
 });*/
 
 // TODO: Does this work?
+// TODO: Update player info, cover, title ...
 function loadEpisode() {
+    episodeCover = $('#episode-cover').text();
     episodeId = $('#episode_id').text();
     episodeTitle = $('#episode_title').text();
     enclosureUrl = $('#enclosure_url').text();
@@ -138,34 +139,31 @@ function loadEpisode() {
 // TODO: Fix load current time to localStorage
 // TODO: Support for more fileTypes than mp3
 // TODO: Need support for Modernizer
-/*function loadPlayerState() {
+function loadPlayerState() {
     if (!Modernizr.localstorage) { return false; }
     if( localStorage[PODR_ENCLOSURE_URL]) {
-        $("#audio-player-container").jPlayer("setMedia", {
-            mp3: localStorage[PODR_ENCLOSURE_URL]
-        });
-
-        $("#audio-player-container").bind($.jPlayer.event.canplaythrough, function() {
-            //$("#audio-player-container").jPlayer("play", localStorage[PODR_ENCLOSURE_TIME]);
-            // TODO: Autoplay disabled
-            //$("#audio-player-container").jPlayer("play");
-            console.log("Loading enclosure time: " + localStorage[PODR_ENCLOSURE_TIME]);
-            $('#playing_episode_title').text(localStorage[PODR_EPISODE_TITLE]);
-        });
+        playerAudioElement.src = localStorage[PODR_ENCLOSURE_URL];
+        playerAudioElement.type = localStorage[PODR_ENCLOSURE_TYPE];
+        playerAudioElement.addEventListener('canplaythrough', function() {
+            this.currentTime = localStorage[PODR_ENCLOSURE_TIME]; // jumps to Xth secs
+            console.log('Loading enclosure time: ' + localStorage[PODR_ENCLOSURE_TIME]);
+            // TODO: Turn autoplay off
+            playerAudioElement.play();
+        }, false);
     }
     else {
-        $('#playing_episode_title').text("No episode");
+        //$('#playing_episode_title').text("No episode");
     }
 }
 
-function saveCurrentState(event) {
+function savePlayerState() {
     if (!Modernizr.localstorage) { return false; }
-    //if(event.jPlayer.status.paused) { return false; }
+    if(playerAudioElement.paused) { return false; }
 
-    //if(event.jPlayer.status.ended) // TODO: Mark episode as finished
-    if (event.jPlayer.status.currentTime > 1) { // TODO: Run less often
-        localStorage[PODR_ENCLOSURE_TIME] = event.jPlayer.status.currentTime;
-        console.log("Saving enclosure time: " + localStorage[PODR_ENCLOSURE_TIME]);
-        $("#audio-controls-seekbar .bar").css("width", event.jPlayer.status.currentPercentAbsolute + "%");
+    //if(playerAudioElement.ended) // TODO: Mark episode as finished
+    if (playerAudioElement.currentTime > 1) { // TODO: Run less often
+        localStorage[PODR_ENCLOSURE_TIME] = playerAudioElement.currentTime;
+        //console.log("Saving enclosure time: " + localStorage[PODR_ENCLOSURE_TIME]);
+        //$("#audio-controls-seekbar .bar").css("width", event.jPlayer.status.currentPercentAbsolute + "%"); // TODO: Fix
     }
-}*/
+}
