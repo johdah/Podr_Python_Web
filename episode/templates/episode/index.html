@@ -9,6 +9,11 @@
 
         <h1>Episodes</h1>
 
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="{% url 'episode:index' %}">Unarchived</a></li>
+            <li><a href="{% url 'episode:starred' %}">Starred</a></li>
+        </ul>
+
         {% if episodes %}
         <table class="records_list table table-striped">
             <caption>All unarchived episodes</caption>

@@ -57,6 +57,28 @@ def star(request, episode_id):
 
 
 @login_required(login_url='/account/login/')
+def starred(request):
+    starred_user_episode_list = UserEpisode.objects.filter(user=request.user.id, starred=True).order_by("-episode__pub_date")
+
+    paginator = Paginator(starred_user_episode_list, 50) # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        episodes = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        episodes = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        episodes = paginator.page(paginator.num_pages)
+
+    context = {
+        'episodes': episodes,
+        }
+    return render(request, 'episode/starred.html', context)
+
+
+@login_required(login_url='/account/login/')
 def unarchive(request, episode_id):
     episode = get_object_or_404(Episode, pk=episode_id)
     userEpisode, created = UserEpisode.objects.get_or_create(episode=episode, user=request.user)
