@@ -1,3 +1,4 @@
+from datetime import datetime
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
@@ -38,7 +39,8 @@ def add(request):
 
 def details(request, podcast_id):
     podcast = get_object_or_404(Podcast, pk=podcast_id)
-    is_following = UserPodcast.objects.filter(podcast=podcast_id, user=request.user.id).exists()
+    userpodcast = UserPodcast.objects.filter(podcast=podcast_id, user=request.user.id)
+    is_following = userpodcast.first() and userpodcast.first().following
 
     paginator = Paginator(podcast.sorted_episode_set, 50) # Show 25 contacts per page
 
@@ -58,7 +60,10 @@ def details(request, podcast_id):
 @login_required(login_url='/account/login/')
 def follow(request, podcast_id):
     podcast = get_object_or_404(Podcast, pk=podcast_id)
-    userPodcast = UserPodcast.objects.get_or_create(podcast=podcast, user=request.user)
+    userPodcast, created = UserPodcast.objects.get_or_create(podcast=podcast, user=request.user)
+    userPodcast.following = True
+    userPodcast.last_updated = datetime.now()
+    userPodcast.save()
 
     return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast_id}))
 
@@ -66,8 +71,10 @@ def follow(request, podcast_id):
 @login_required(login_url='/account/login/')
 def unfollow(request, podcast_id):
     podcast = get_object_or_404(Podcast, pk=podcast_id)
-    userPodcast = get_object_or_404(UserPodcast, podcast=podcast, user=request.user)
-    userPodcast.delete()
+    userPodcast, created = UserPodcast.objects.get_or_create(podcast=podcast, user=request.user)
+    userPodcast.following = False
+    userPodcast.last_updated = datetime.now()
+    userPodcast.save()
 
     return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast_id}))
 
@@ -84,7 +91,8 @@ def update(request, podcast_id):
     for episode in episodes:
         episode.save()
         for userPodcast in userPodcasts:
-            userEpisode = UserEpisode(episode=episode, user=userPodcast.user)
-            userEpisode.save()
+            if userPodcast.following is True:
+                userEpisode = UserEpisode(episode=episode, user=userPodcast.user)
+                userEpisode.save()
 
     return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast_id}))

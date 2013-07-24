@@ -28,6 +28,9 @@
                     <a href="{% url 'podcast:update' podcast.id %}"><button class="btn btn-inverse" type="button">Update</button></a>
                 {% else %}
                     <a href="{% url 'podcast:follow' podcast.id %}"><button class="btn btn-success" type="button">Follow</button></a>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'podcast:update' podcast.id %}"><button class="btn btn-inverse" type="button">Update</button></a>
+                    {% endif %}
                 {% endif %}
             </p>
 

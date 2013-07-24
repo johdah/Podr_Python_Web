@@ -28,14 +28,12 @@ class Podcast(models.Model):
     def sorted_episode_set(self):
         return self.episode_set.order_by('-pub_date')
 
-    @property
-    def user_is_following(self, user_id):
-        return self.userpodcast_set.exists(user=user_id)
-
 
 class UserPodcast(models.Model):
     user = models.ForeignKey(User)
     podcast = models.ForeignKey(Podcast)
+    following = models.BooleanField(default=False)
+    last_updated = models.DateTimeField('Last Updated', default=datetime.now())
 
 
 class Episode(models.Model):
