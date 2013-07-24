@@ -15,12 +15,22 @@ class AddPodcastForm(forms.Form):
 
 
 def index(request):
-    latest_podcast_list = Podcast.objects.order_by('-title')[:5]
+    #podcasts_following_list = Podcast.objects.filter.order_by('-title')[:5]
+    podcasts_following_list = UserPodcast.objects.filter(user=request.user.id).order_by("-podcast__title")
     context = {
-        'latest_podcast_list': latest_podcast_list,
+        'podcast_list': podcasts_following_list,
         'form': AddPodcastForm()
     }
     return render(request, 'podcast/index.html', context)
+
+
+def all(request):
+    all_podcasts_list = Podcast.objects.order_by('-title')[:5]
+    context = {
+        'podcast_list': all_podcasts_list,
+        'form': AddPodcastForm()
+    }
+    return render(request, 'podcast/all.html', context)
 
 
 #

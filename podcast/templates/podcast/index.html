@@ -8,21 +8,28 @@
         <li class="active">Podcasts</li>
     </ul>
 
-    {% if latest_podcast_list %}
+    <h1>Subscriptions</h1>
+
+    <ul class="nav nav-tabs">
+        <li><a href="{% url 'podcast:all' %}">All</a></li>
+        <li class="active"><a href="{% url 'podcast:index' %}">Following</a></li>
+    </ul>
+
+    {% if podcast_list %}
     <ul class="thumbnails">
-    {% for podcast in latest_podcast_list %}
+    {% for userpodcast in podcast_list %}
         <li class="span3">
             <div class="subscription-thumbnail-list thumbnail">
-                {% if podcast.itunes_image %}
-                    <img src="{{ podcast.itunes_image }}" alt="" width="260">
+                {% if userpodcast.podcast.itunes_image %}
+                    <img src="{{ userpodcast.podcast.itunes_image }}" alt="" width="260">
                 {% else %}
                     <img data-src="{% static "podr/js/holder.js/260x180" %}" alt="">
                 {% endif %}
-                <h3><a href="{% url 'podcast:details' podcast.id %}">{{ podcast.title }}</a></h3>
-                {% if podcast.itunes_subtitle %}
-                    <p>{{ podcast.itunes_subtitle|truncatechars:120 }}</p>
-                {% elif podcast.itunes_summary %}
-                    <p>{{ podcast.itunes_summary|truncatechars:120 }}</p>
+                <h3><a href="{% url 'podcast:details' userpodcast.podcast.id %}">{{ podcast.title }}</a></h3>
+                {% if userpodcast.podcast.itunes_subtitle %}
+                    <p>{{ userpodcast.podcast.itunes_subtitle|truncatechars:120 }}</p>
+                {% elif userpodcast.podcast.itunes_summary %}
+                    <p>{{ userpodcast.podcast.itunes_summary|truncatechars:120 }}</p>
                 {% else %}
                     <p>No description...</p>
                 {% endif %}
