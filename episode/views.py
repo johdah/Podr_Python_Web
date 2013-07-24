@@ -47,10 +47,30 @@ def archive(request, episode_id):
 
 
 @login_required(login_url='/account/login/')
+def star(request, episode_id):
+    episode = get_object_or_404(Episode, pk=episode_id)
+    userEpisode = get_object_or_404(UserEpisode, episode=episode, user=request.user)
+    userEpisode.starred = True
+    userEpisode.save()
+
+    return redirect(reverse('episode:details', kwargs={'episode_id': episode_id}))
+
+
+@login_required(login_url='/account/login/')
 def unarchive(request, episode_id):
     episode = get_object_or_404(Episode, pk=episode_id)
     userEpisode, created = UserEpisode.objects.get_or_create(episode=episode, user=request.user)
     userEpisode.archived = False
+    userEpisode.save()
+
+    return redirect(reverse('episode:details', kwargs={'episode_id': episode_id}))
+
+
+@login_required(login_url='/account/login/')
+def unstar(request, episode_id):
+    episode = get_object_or_404(Episode, pk=episode_id)
+    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode, user=request.user)
+    userEpisode.starred = False
     userEpisode.save()
 
     return redirect(reverse('episode:details', kwargs={'episode_id': episode_id}))

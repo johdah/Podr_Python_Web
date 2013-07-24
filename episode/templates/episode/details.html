@@ -33,6 +33,12 @@
                     {% else %}
                         <a href="{% url 'episode:unarchive' episode.id %}"><button class="btn btn-success" type="button">Add</button></a>
                     {% endif %}
+
+                    {% if user_episode and user_episode.starred %}
+                        <a href="{% url 'episode:unstar' episode.id %}"><button class="btn btn-danger" type="button">Unstar</button></a>
+                    {% else %}
+                        <a href="{% url 'episode:star' episode.id %}"><button class="btn btn-success" type="button">Star</button></a>
+                    {% endif %}
                 </p>
 
                 <p class="muted">Rating</p>

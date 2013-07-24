@@ -77,6 +77,7 @@ class UserEpisode(models.Model):
     user = models.ForeignKey(User)
     episode = models.ForeignKey(Episode)
     archived = models.BooleanField(default=False)
+    starred = models.BooleanField(default=False)
     playing_status = models.IntegerField(choices=PlayingStatus, default=PLAYING_UNPLAYED)
     playing_current_time = models.IntegerField(default=0)
     last_updated = models.DateTimeField('Last Updated', default=datetime.now())
