@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'podr:index' %}">Home</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'about' %}">About</a> <span class="divider">/</span></li>
+            <li class="active">Changelog</li>
+        </ul>
+
+        <h1>Changelog</h1>
+        <div class="tabbable tabs-right">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab1" data-toggle="tab">V0.1-Dev</a></li>
+                <li><a href="#tab2" data-toggle="tab">V0.2-Dev</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab1">
+                    <ul>
+                        <li>Initial Release</li>
+                        <li>API V1<ul>
+                            <li>Session Authentication</li>
+                            <li>Token Authentication</li>
+                            <li>Get all Episode/Podcast</li>
+                            <li>Get all UserEpisode and UserPodcast for logged in user</li>
+                        </ul></li>
+                    </ul>
+                </div>
+                <div class="tab-pane" id="tab2">
+                    <ul>
+                        <li>TBA</li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
