@@ -19,8 +19,10 @@ def index(request):
     context = {
         'following_podcasts': UserPodcast.objects.filter(user=request.user).count(),
         'starred_episodes': UserEpisode.objects.filter(user=request.user, starred=True).count(),
-        'thumbs_down': UserEpisode.objects.filter(user=request.user, rating=-1).count(),
-        'thumbs_up': UserEpisode.objects.filter(user=request.user, rating=1).count(),
+        'episode_thumbs_down': UserEpisode.objects.filter(user=request.user, rating=-1).count(),
+        'episode_thumbs_up': UserEpisode.objects.filter(user=request.user, rating=1).count(),
+        'podcast_thumbs_down': UserPodcast.objects.filter(user=request.user, rating=-1).count(),
+        'podcast_thumbs_up': UserPodcast.objects.filter(user=request.user, rating=1).count(),
     }
     return render(request, 'account/index.html', context)
 

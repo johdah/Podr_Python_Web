@@ -33,4 +33,4 @@ class UserPodcastSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = UserPodcast
-        fields = ('podcast', 'following', 'last_updated')
+        fields = ('podcast', 'following', 'rating', 'last_updated')

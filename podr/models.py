@@ -33,6 +33,7 @@ class UserPodcast(models.Model):
     user = models.ForeignKey(User)
     podcast = models.ForeignKey(Podcast)
     following = models.BooleanField(default=False)
+    rating = models.IntegerField(default=0)
     last_updated = models.DateTimeField('Last Updated', default=datetime.now())
 
 
