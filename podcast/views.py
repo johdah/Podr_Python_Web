@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.core.urlresolvers import reverse
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -17,8 +18,21 @@ class AddPodcastForm(forms.Form):
 def index(request):
     #podcasts_following_list = Podcast.objects.filter.order_by('-title')[:5]
     podcasts_following_list = UserPodcast.objects.filter(user=request.user.id).order_by("-podcast__title")
+
+    paginator = Paginator(podcasts_following_list, 20) # Show 20 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        podcasts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        podcasts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        podcasts = paginator.page(paginator.num_pages)
+
     context = {
-        'podcast_list': podcasts_following_list,
+        'podcast_list': podcasts,
         'form': AddPodcastForm()
     }
     return render(request, 'podcast/index.html', context)
@@ -26,8 +40,21 @@ def index(request):
 
 def all(request):
     all_podcasts_list = Podcast.objects.order_by('-title')[:5]
+
+    paginator = Paginator(all_podcasts_list, 20) # Show 20 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        podcasts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        podcasts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        podcasts = paginator.page(paginator.num_pages)
+
     context = {
-        'podcast_list': all_podcasts_list,
+        'podcast_list': podcasts,
         'form': AddPodcastForm()
     }
     return render(request, 'podcast/all.html', context)
@@ -101,6 +128,27 @@ def thumb_up(request, podcast_id):
     userPodcast.save()
 
     return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast_id}))
+
+
+def top(request):
+    top_podcasts_list = Podcast.objects.annotate(sum_rating=Sum('userpodcast__rating')).order_by('-sum_rating')
+
+    paginator = Paginator(top_podcasts_list, 20) # Show 20 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        podcasts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        podcasts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        podcasts = paginator.page(paginator.num_pages)
+    context = {
+        'podcast_list': podcasts,
+        'form': AddPodcastForm()
+    }
+    return render(request, 'podcast/top.html', context)
 
 
 @login_required(login_url='/account/login/')

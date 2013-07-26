@@ -11,33 +11,34 @@
         <h1>Subscriptions</h1>
 
         <ul class="nav nav-tabs">
-            <li class="active"><a href="{% url 'podcast:all' %}">All</a></li>
-            <li><a href="{% url 'podcast:top' %}">Top</a></li>
+            <li><a href="{% url 'podcast:all' %}">All</a></li>
+            <li class="active"><a href="{% url 'podcast:top' %}">Top</a></li>
             <li><a href="{% url 'podcast:index' %}">Following</a></li>
         </ul>
 
         {% if podcast_list %}
-        <ul class="thumbnails">
-            {% for podcast in podcast_list %}
-                <li class="span3">
-                    <div class="subscription-thumbnail-list thumbnail">
-                        {% if podcast.itunes_image %}
-                            <img src="{{ podcast.itunes_image }}" alt="" width="260">
-                        {% else %}
-                            <img data-src="{% static "podr/js/holder.js/260x180" %}" alt="">
-                        {% endif %}
-                        <h3><a href="{% url 'podcast:details' podcast.id %}">{{ podcast.title }}</a></h3>
-                        {% if podcast.itunes_subtitle %}
-                            <p>{{ podcast.itunes_subtitle|truncatechars:120 }}</p>
-                        {% elif podcast.itunes_summary %}
-                            <p>{{ podcast.itunes_summary|truncatechars:120 }}</p>
-                        {% else %}
-                            <p>No description...</p>
-                        {% endif %}
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+            <ul class="thumbnails">
+                {% for podcast in podcast_list %}
+                    <li class="span3">
+                        <div class="subscription-thumbnail-list thumbnail">
+                            {% if podcast.itunes_image %}
+                                <img src="{{ podcast.itunes_image }}" alt="" width="260">
+                            {% else %}
+                                <img data-src="{% static "podr/js/holder.js/260x180" %}" alt="">
+                            {% endif %}
+                            <h3><a href="{% url 'podcast:details' podcast.id %}">{{ podcast.title }}</a></h3>
+                            <p>Rating: {{ podcast.total_rating.rating__sum }}</p>
+                            {% if podcast.itunes_subtitle %}
+                                <p>{{ podcast.itunes_subtitle|truncatechars:120 }}</p>
+                            {% elif podcast.itunes_summary %}
+                                <p>{{ podcast.itunes_summary|truncatechars:120 }}</p>
+                            {% else %}
+                                <p>No description...</p>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
         {% else %}
             <p>No podcasts are available.</p>
         {% endif %}

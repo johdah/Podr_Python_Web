@@ -29,6 +29,9 @@ class Podcast(models.Model):
     def sorted_episode_set(self):
         return self.episode_set.order_by('-pub_date')
 
+    def total_rating(self):
+        return self.userpodcast_set.aggregate(Sum('rating'))
+
 
 class UserPodcast(models.Model):
     user = models.ForeignKey(User)

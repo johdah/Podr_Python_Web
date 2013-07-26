@@ -12,6 +12,7 @@
 
     <ul class="nav nav-tabs">
         <li><a href="{% url 'podcast:all' %}">All</a></li>
+        <li><a href="{% url 'podcast:top' %}">Top</a></li>
         <li class="active"><a href="{% url 'podcast:index' %}">Following</a></li>
     </ul>
 
@@ -40,6 +41,24 @@
     {% else %}
     <p>No podcasts are available.</p>
     {% endif %}
+
+    <ul class="pager">
+        {% if podcasts.has_previous %}
+            <li class="previous"><a href="?page={{ podcasts.previous_page_number }}">&larr; Older</a></li>
+        {% else %}
+            <li class="previous disabled">&larr; Older</li>
+        {% endif %}
+
+        <span class="current">
+                Page {{ podcasts.number }} of {{ podcasts.paginator.num_pages }}.
+            </span>
+
+        {% if episodes.has_next %}
+            <li class="next"><a href="?page={{ podcasts.next_page_number }}">Newer &rarr;</a></li>
+        {% else %}
+            <li class="next disabled">Newer &rarr;</li>
+        {% endif %}
+    </ul>
 
     <h2>Add new podcast</h2>
     <p>If you are missing a podcast. Please add it to the service.</p>
