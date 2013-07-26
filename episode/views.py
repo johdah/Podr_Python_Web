@@ -29,13 +29,15 @@ def index(request):
 
 def details(request, episode_id):
     episode = get_object_or_404(Episode, pk=episode_id)
-    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode, user=request.user.id).first()
+    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode, user=request.user.id)
     userPodcast, created = UserPodcast.objects.get_or_create(podcast=episode.podcast, user=request.user.id)
 
     context = {
         'episode': episode,
         'userepisode': userEpisode,
         'userpodcast': userPodcast,
+        'thumbs_down': UserEpisode.objects.filter(episode=episode, rating=-1).count(),
+        'thumbs_up': UserEpisode.objects.filter(episode=episode, rating=1).count(),
     }
     return render(request, 'episode/details.html', context)
 

@@ -53,7 +53,7 @@
                     {% endif %}
                 </p>
 
-                <p class="muted">Rating</p>
+                <p>Rating: <span><i class="icon-thumbs-up"></i> {{ thumbs_up }}</span> <span><i class="icon-thumbs-down"></i> {{ thumbs_down }}</span></p>
                 {% if episode.itunes_explicit %}
                     <p>Parental Advisory</p>
                 {% endif %}

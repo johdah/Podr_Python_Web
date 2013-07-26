@@ -66,7 +66,10 @@ def details(request, podcast_id):
     context = {
         'podcast': podcast,
         'userpodcast': userpodcast,
-        'episodes': episodes}
+        'episodes': episodes,
+        'thumbs_down': UserPodcast.objects.filter(podcast=podcast, rating=-1).count(),
+        'thumbs_up': UserPodcast.objects.filter(podcast=podcast, rating=1).count(),
+    }
 
     return render(request, 'podcast/details.html', context)
 
