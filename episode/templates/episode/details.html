@@ -94,8 +94,11 @@
                 {% endif %}
 
                 <hr />
-                <p><a onclick="javascript:loadEpisode()"><button class="btn btn-success" type="button">Play</button></a><a href="{{ episode.enclosureUrl }}" id="enclosure_url">{{ episode.enclosureUrl }}</a> <span id="enclosure_type">({{ episode.enclosureType }})</span></p>
-                <p>Duration: {{ episode.itunes_duration_as_string }}</p>
+                <p>
+                    <a onclick="javascript:loadEpisode()"><button class="btn btn-success" type="button">Play</button></a>
+                    <a href="{{ episode.enclosureUrl }}" id="enclosure_url"><button class="btn btn-success" type="button">Download</button></a>
+                </p>
+                <p>Duration: {{ episode.itunes_duration_as_string }} <span id="enclosure_type">({{ episode.enclosureType }})</span></p>
 
                 <ul class="record_actions">
                     <li>
