@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect
+from podr.models import UserPodcast, UserEpisode
 
 
 class LoginForm(forms.Form):
@@ -15,7 +16,13 @@ class LoginForm(forms.Form):
 
 @login_required(login_url='/account/login/')
 def index(request):
-    return render(request, 'account/index.html')
+    context = {
+        'following_podcasts': UserPodcast.objects.filter(user=request.user).count(),
+        'starred_episodes': UserEpisode.objects.filter(user=request.user, starred=True).count(),
+        'thumbs_down': UserEpisode.objects.filter(user=request.user, rating=-1).count(),
+        'thumbs_up': UserEpisode.objects.filter(user=request.user, rating=1).count(),
+    }
+    return render(request, 'account/index.html', context)
 
 
 #def change_password(request):

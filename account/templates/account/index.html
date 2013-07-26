@@ -4,9 +4,27 @@
     <div class="container">
         <ul class="breadcrumb">
             <li><a href="/">Home</a> <span class="divider">/</span></li>
-            <li class="active">{{ user.username }}</li>
+            <li class="active">Profile</li>
         </ul>
 
+        {% if user.first_name or user.last_name %}
+        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+        {% else %}
         <h1>{{ user.username }}</h1>
+        {% endif %}
+
+        <ul>
+            <li><del>Change password</del></li>
+            <li><del>Reset token</del></li>
+            <li><del>Update profile</del></li>
+        </ul>
+
+        <h2>Statistics</h2>
+        <ul>
+            <li>{{ thumbs_up }} thumbs up</li>
+            <li>{{ thumbs_down }} thumbs down</li>
+            <li>{{ following_podcasts }} podcasts followed</li>
+            <li>{{ starred_episodes }} episodes starred</li>
+        </ul>
     </div>
 {% endblock %}

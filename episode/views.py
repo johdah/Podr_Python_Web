@@ -48,8 +48,7 @@ def archive(request, episode_id):
 
 @login_required(login_url='/account/login/')
 def star(request, episode_id):
-    episode = get_object_or_404(Episode, pk=episode_id)
-    userEpisode = get_object_or_404(UserEpisode, episode=episode, user=request.user)
+    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode_id, user=request.user)
     userEpisode.starred = True
     userEpisode.save()
 
