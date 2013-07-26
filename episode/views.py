@@ -48,7 +48,8 @@ def archive(request, episode_id):
 
 @login_required(login_url='/account/login/')
 def star(request, episode_id):
-    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode_id, user=request.user)
+    episode = get_object_or_404(Episode, pk=episode_id)
+    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode, user=request.user)
     userEpisode.starred = True
     userEpisode.save()
 
@@ -75,6 +76,24 @@ def starred(request):
         'episodes': episodes,
         }
     return render(request, 'episode/starred.html', context)
+
+
+@login_required(login_url='/account/login/')
+def thumb_down(request, episode_id):
+    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode_id, user=request.user)
+    userEpisode.rating = -1
+    userEpisode.save()
+
+    return redirect(reverse('episode:details', kwargs={'episode_id': episode_id}))
+
+
+@login_required(login_url='/account/login/')
+def thumb_up(request, episode_id):
+    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode_id, user=request.user)
+    userEpisode.rating = 1
+    userEpisode.save()
+
+    return redirect(reverse('episode:details', kwargs={'episode_id': episode_id}))
 
 
 @login_required(login_url='/account/login/')

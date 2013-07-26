@@ -10,6 +10,10 @@ urlpatterns = patterns('',
     url(r'^(?P<podcast_id>\d+)/$', views.details, name='details'),
     # ex: /podcast/5/follow
     url(r'^(?P<podcast_id>\d+)/follow/$', views.follow, name='follow'),
+    # ex: /podcast/5/thumb_down
+    url(r'^(?P<podcast_id>\d+)/thumb_down', views.thumb_down, name='thumb_down'),
+    # ex: /podcast/5/thumb_up
+    url(r'^(?P<podcast_id>\d+)/thumb_up', views.thumb_up, name='thumb_up'),
     # ex: /podcast/5/unfollow
     url(r'^(?P<podcast_id>\d+)/unfollow/$', views.unfollow, name='unfollow'),
     # ex: /podcast/5/update

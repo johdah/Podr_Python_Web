@@ -79,6 +79,24 @@ def follow(request, podcast_id):
 
 
 @login_required(login_url='/account/login/')
+def thumb_down(request, podcast_id):
+    userPodcast, created = UserPodcast.objects.get_or_create(episode=podcast_id, user=request.user)
+    userPodcast.rating = -1
+    userPodcast.save()
+
+    return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast_id}))
+
+
+@login_required(login_url='/account/login/')
+def thumb_up(request, podcast_id):
+    userPodcast, created = UserPodcast.objects.get_or_create(episode=podcast_id, user=request.user)
+    userPodcast.rating = 1
+    userPodcast.save()
+
+    return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast_id}))
+
+
+@login_required(login_url='/account/login/')
 def unfollow(request, podcast_id):
     podcast = get_object_or_404(Podcast, pk=podcast_id)
     userPodcast, created = UserPodcast.objects.get_or_create(podcast=podcast, user=request.user)
