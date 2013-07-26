@@ -82,6 +82,10 @@
                 {% endif %}
 
                 <hr />
+                <p>
+                    <a class="btn btn-small" href="{% url 'episode:thumb_up' episode.id %}"><i class="icon-thumbs-up"></i> Like</a>
+                    <a class="btn btn-small" href="{% url 'episode:thumb_down' episode.id %}"><i class="icon-thumbs-down"></i> Dislike</a>
+                </p>
                 <p><a onclick="javascript:loadEpisode()"><button class="btn btn-success" type="button">Play</button></a><a href="{{ episode.enclosureUrl }}" id="enclosure_url">{{ episode.enclosureUrl }}</a> <span id="enclosure_type">({{ episode.enclosureType }})</span></p>
                 <p>Duration: {{ episode.itunes_duration_as_string }}</p>
 

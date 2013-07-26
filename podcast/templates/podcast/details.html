@@ -33,6 +33,10 @@
                     {% endif %}
                 {% endif %}
             </p>
+            <p>
+                <a class="btn btn-small" href="{% url 'podcast:thumb_up' podcast.id %}"><i class="icon-thumbs-up"></i> Like</a>
+                <a class="btn btn-small" href="{% url 'podcast:thumb_down' podcast.id %}"><i class="icon-thumbs-down"></i> Dislike</a>
+            </p>
 
             <p class="muted">Rating</p>
             {% if podcast.itunes_explicit %}
