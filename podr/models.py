@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
+from django.db.models import Sum
 from django.utils import timezone
 from django.db import models
 
@@ -65,6 +66,9 @@ class Episode(models.Model):
 
     def itunes_duration_as_string(self):
         return str(timedelta(seconds=self.itunes_duration))
+
+    def total_rating(self):
+        return self.userepisode_set.aggregate(Sum('rating'))
 
 
 class UserEpisode(models.Model):

@@ -6,6 +6,8 @@ urlpatterns = patterns('',
    url(r'^$', views.index, name='index'),
    # ex: /episode/starred
    url(r'^starred/$', views.starred, name='starred'),
+   # ex: /episode/top
+   url(r'^top/$', views.top, name='top'),
    # ex: /episode/5/
    url(r'^(?P<episode_id>\d+)/$', views.details, name='details'),
    # ex: /episode/5/archive

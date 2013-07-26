@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
+from django.db.models import Sum
 from django.shortcuts import render, get_object_or_404, redirect
 from podr.models import Episode, UserEpisode, UserPodcast
 
@@ -29,8 +30,8 @@ def index(request):
 
 def details(request, episode_id):
     episode = get_object_or_404(Episode, pk=episode_id)
-    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode, user=request.user.id)
-    userPodcast, created = UserPodcast.objects.get_or_create(podcast=episode.podcast, user=request.user.id)
+    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode, user=request.user)
+    userPodcast, created = UserPodcast.objects.get_or_create(podcast=episode.podcast, user=request.user)
 
     context = {
         'episode': episode,
@@ -100,6 +101,28 @@ def thumb_up(request, episode_id):
     userEpisode.save()
 
     return redirect(reverse('episode:details', kwargs={'episode_id': episode_id}))
+
+
+@login_required(login_url='/account/login/')
+def top(request):
+    top_episode_list = Episode.objects.annotate(sum_rating=Sum('userepisode__rating')).order_by('-sum_rating')
+
+    paginator = Paginator(top_episode_list, 50) # Show 25 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        episodes = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        episodes = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        episodes = paginator.page(paginator.num_pages)
+
+    context = {
+        'episodes': episodes,
+    }
+    return render(request, 'episode/top.html', context)
 
 
 @login_required(login_url='/account/login/')

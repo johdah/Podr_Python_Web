@@ -10,29 +10,31 @@
         <h1>Episodes</h1>
 
         <ul class="nav nav-tabs">
-            <li><a href="{% url 'episode:top' %}">Top rated</a></li>
+            <li class="active"><a href="{% url 'episode:top' %}">Top rated</a></li>
             <li><a href="{% url 'episode:index' %}">Unarchived</a></li>
-            <li class="active"><a href="{% url 'episode:starred' %}">Starred</a></li>
+            <li><a href="{% url 'episode:starred' %}">Starred</a></li>
         </ul>
 
         {% if episodes %}
             <table class="records_list table table-striped">
-                <caption>All starred episodes</caption>
+                <caption>Top rated episodes</caption>
                 <thead>
                 <tr>
                     <th>Title</th>
                     <th>Subscription</th>
                     <th>Published</th>
+                    <th>Rating</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
 
-                {% for user_episode in episodes %}
+                {% for episode in episodes %}
                     <tr>
-                        <td><a href="{% url 'episode:details' user_episode.episode.id %}">{{ user_episode.episode.title }}</a></td>
-                        <td><a href="{% url 'podcast:details' user_episode.episode.podcast.id %}">{{ user_episode.episode.podcast.title }}</a></td>
-                        <td>{% if user_episode.episode.pub_date %}{{ user_episode.episode.pub_date|date:"Y-m-d H:i:s" }}{% endif %}</td>
+                        <td><a href="{% url 'episode:details' episode.id %}">{{ episode.title }}</a></td>
+                        <td><a href="{% url 'podcast:details' episode.podcast.id %}">{{ episode.podcast.title }}</a></td>
+                        <td>{% if episode.pub_date %}{{ episode.pub_date|date:"Y-m-d H:i:s" }}{% endif %}</td>
+                        <td>{{ episode.total_rating.rating__sum }}</td>
                         <td></td>
                     </tr>
                 {% endfor %}
