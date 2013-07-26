@@ -29,11 +29,15 @@ def index(request):
 
 def details(request, episode_id):
     episode = get_object_or_404(Episode, pk=episode_id)
-    userEpisode = UserEpisode.objects.filter(episode=episode, user=request.user.id).first()
-    is_following_podcast = UserPodcast.objects.filter(podcast=episode.podcast, user=request.user.id).exists()
+    userEpisode, created = UserEpisode.objects.get_or_create(episode=episode, user=request.user.id).first()
+    userPodcast, created = UserPodcast.objects.get_or_create(podcast=episode.podcast, user=request.user.id)
 
-    return render(request, 'episode/details.html', {
-        'episode': episode, 'user_episode': userEpisode, 'is_following_podcast': is_following_podcast})
+    context = {
+        'episode': episode,
+        'userepisode': userEpisode,
+        'userpodcast': userPodcast,
+    }
+    return render(request, 'episode/details.html', context)
 
 
 @login_required(login_url='/account/login/')

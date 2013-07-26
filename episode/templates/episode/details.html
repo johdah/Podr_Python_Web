@@ -26,18 +26,30 @@
                     </a>
                 </div>
                 <p>
-                    {% if user_episode and user_episode.archived %}
+                    {% if userepisode and userepisode.archived %}
                         <a href="{% url 'episode:unarchive' episode.id %}"><button class="btn btn-success" type="button">Unarchive</button></a>
-                    {% elif user_episode and not user_episode.archived %}
+                    {% elif userepisode and not userepisode.archived %}
                         <a href="{% url 'episode:archive' episode.id %}"><button class="btn btn-danger" type="button">Archive</button></a>
                     {% else %}
                         <a href="{% url 'episode:unarchive' episode.id %}"><button class="btn btn-success" type="button">Add</button></a>
                     {% endif %}
 
-                    {% if user_episode and user_episode.starred %}
+                    {% if userepisode and userepisode.starred %}
                         <a href="{% url 'episode:unstar' episode.id %}"><button class="btn btn-danger" type="button">Unstar</button></a>
                     {% else %}
                         <a href="{% url 'episode:star' episode.id %}"><button class="btn btn-success" type="button">Star</button></a>
+                    {% endif %}
+                </p>
+                <p>
+                    {% if userepisode.rating == 1 %}
+                        <a class="btn btn-small disabled" href="{% url 'episode:thumb_up' episode.id %}"><i class="icon-thumbs-up"></i> Like</a>
+                    {% else %}
+                        <a class="btn btn-small" href="{% url 'episode:thumb_up' episode.id %}"><i class="icon-thumbs-up"></i> Like</a>
+                    {% endif %}
+                    {% if userepisode.rating == -1 %}
+                        <a class="btn btn-small disabled" href="{% url 'episode:thumb_down' episode.id %}"><i class="icon-thumbs-down"></i> Dislike</a>
+                    {% else %}
+                        <a class="btn btn-small" href="{% url 'episode:thumb_down' episode.id %}"><i class="icon-thumbs-up"></i> Dislike</a>
                     {% endif %}
                 </p>
 
@@ -82,10 +94,6 @@
                 {% endif %}
 
                 <hr />
-                <p>
-                    <a class="btn btn-small" href="{% url 'episode:thumb_up' episode.id %}"><i class="icon-thumbs-up"></i> Like</a>
-                    <a class="btn btn-small" href="{% url 'episode:thumb_down' episode.id %}"><i class="icon-thumbs-down"></i> Dislike</a>
-                </p>
                 <p><a onclick="javascript:loadEpisode()"><button class="btn btn-success" type="button">Play</button></a><a href="{{ episode.enclosureUrl }}" id="enclosure_url">{{ episode.enclosureUrl }}</a> <span id="enclosure_type">({{ episode.enclosureType }})</span></p>
                 <p>Duration: {{ episode.itunes_duration_as_string }}</p>
 

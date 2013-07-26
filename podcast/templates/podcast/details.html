@@ -23,7 +23,7 @@
                 </a>
             </div>
             <p>
-                {% if is_following %}
+                {% if userpodcast.following %}
                     <a href="{% url 'podcast:unfollow' podcast.id %}"><button class="btn btn-danger" type="button">Unfollow</button></a>
                     <a href="{% url 'podcast:update' podcast.id %}"><button class="btn btn-inverse" type="button">Update</button></a>
                 {% else %}
@@ -34,8 +34,16 @@
                 {% endif %}
             </p>
             <p>
+                {% if userpodcast.rating == 1 %}
+                <a class="btn btn-small disabled" href="{% url 'podcast:thumb_up' podcast.id %}"><i class="icon-thumbs-up"></i> Like</a>
+                {% else %}
                 <a class="btn btn-small" href="{% url 'podcast:thumb_up' podcast.id %}"><i class="icon-thumbs-up"></i> Like</a>
-                <a class="btn btn-small" href="{% url 'podcast:thumb_down' podcast.id %}"><i class="icon-thumbs-down"></i> Dislike</a>
+                {% endif %}
+                {% if userpodcast.rating == -1 %}
+                <a class="btn btn-small disabled" href="{% url 'podcast:thumb_down' podcast.id %}"><i class="icon-thumbs-down"></i> Dislike</a>
+                {% else %}
+                <a class="btn btn-small" href="{% url 'podcast:thumb_down' podcast.id %}"><i class="icon-thumbs-up"></i> Dislike</a>
+                {% endif %}
             </p>
 
             <p class="muted">Rating</p>

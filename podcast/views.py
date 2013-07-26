@@ -49,8 +49,7 @@ def add(request):
 
 def details(request, podcast_id):
     podcast = get_object_or_404(Podcast, pk=podcast_id)
-    userpodcast = UserPodcast.objects.filter(podcast=podcast_id, user=request.user.id)
-    is_following = userpodcast.first() and userpodcast.first().following
+    userpodcast, created = UserPodcast.objects.get_or_create(podcast=podcast_id, user=request.user.id)
 
     paginator = Paginator(podcast.sorted_episode_set, 50) # Show 25 contacts per page
 
@@ -64,7 +63,12 @@ def details(request, podcast_id):
         # If page is out of range (e.g. 9999), deliver last page of results.
         episodes = paginator.page(paginator.num_pages)
 
-    return render(request, 'podcast/details.html', {'podcast': podcast, 'is_following': is_following, 'episodes': episodes})
+    context = {
+        'podcast': podcast,
+        'userpodcast': userpodcast,
+        'episodes': episodes}
+
+    return render(request, 'podcast/details.html', context)
 
 
 @login_required(login_url='/account/login/')
