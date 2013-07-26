@@ -5,6 +5,10 @@ from django.utils import timezone
 from django.db import models
 
 
+class Category(models.Model):
+    title = models.CharField(max_length=55, default="Unknown")
+
+
 class Podcast(models.Model):
     title = models.CharField(max_length=100, default="Unknown")
     link = models.CharField(max_length=255)
@@ -31,6 +35,11 @@ class Podcast(models.Model):
 
     def total_rating(self):
         return self.userpodcast_set.aggregate(Sum('rating'))
+
+
+class PodcastCategories(models.Model):
+    category = models.ForeignKey(Category)
+    podcast = models.ForeignKey(Podcast)
 
 
 class UserPodcast(models.Model):
