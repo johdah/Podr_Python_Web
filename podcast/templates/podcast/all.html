@@ -8,7 +8,7 @@
             <li class="active">Podcasts</li>
         </ul>
 
-        <h1>Subscriptions</h1>
+        <h1>Podcasts</h1>
 
         <ul class="nav nav-tabs">
             <li class="active"><a href="{% url 'podcast:all' %}">All</a></li>
@@ -16,58 +16,27 @@
             <li><a href="{% url 'podcast:index' %}">Following</a></li>
         </ul>
 
-        {% if podcast_list %}
-        <ul class="thumbnails">
-            {% for podcast in podcast_list %}
-                <li class="span3">
-                    <div class="subscription-thumbnail-list thumbnail">
-                        {% if podcast.itunes_image %}
-                            <img src="{{ podcast.itunes_image }}" alt="" width="260">
-                        {% else %}
-                            <img data-src="{% static "podr/js/holder.js/260x180" %}" alt="">
-                        {% endif %}
-                        <h3><a href="{% url 'podcast:details' podcast.id %}">{{ podcast.title }}</a></h3>
-                        {% if podcast.itunes_subtitle %}
-                            <p>{{ podcast.itunes_subtitle|truncatechars:120 }}</p>
-                        {% elif podcast.itunes_summary %}
-                            <p>{{ podcast.itunes_summary|truncatechars:120 }}</p>
-                        {% else %}
-                            <p>No description...</p>
-                        {% endif %}
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+        {% if categories %}
+            <table class="records_list table table-striped">
+                <caption>All categories</caption>
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for category in categories %}
+                    <tr>
+                        <td><a href="{% url 'podcast:category' category.id %}">{{ category.title }}</a></td>
+                        <td>???</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-            <p>No podcasts are available.</p>
+            <p>No categories are available.</p>
         {% endif %}
-
-        <ul class="pager">
-            {% if podcasts.has_previous %}
-                <li class="previous"><a href="?page={{ podcasts.previous_page_number }}">&larr; Older</a></li>
-            {% else %}
-                <li class="previous disabled">&larr; Older</li>
-            {% endif %}
-
-            <span class="current">
-                Page {{ podcasts.number }} of {{ podcasts.paginator.num_pages }}.
-            </span>
-
-            {% if episodes.has_next %}
-                <li class="next"><a href="?page={{ podcasts.next_page_number }}">Newer &rarr;</a></li>
-            {% else %}
-                <li class="next disabled">Newer &rarr;</li>
-            {% endif %}
-        </ul>
-
-        <h2>Add new podcast</h2>
-        <p>If you are missing a podcast. Please add it to the service.</p>
-
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
-        <form action="{% url 'podcast:add' %}" method="post">{% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Submit" />
-        </form>
     </div>
 {% endblock %}

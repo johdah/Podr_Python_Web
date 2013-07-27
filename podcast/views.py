@@ -4,10 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import PageNotAnInteger, EmptyPage, Paginator
 from django.core.urlresolvers import reverse
 from django.db.models import Sum
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 
-from podr.models import Podcast, UserPodcast, UserEpisode
+from podr.models import Podcast, UserPodcast, UserEpisode, Category, PodcastCategories
 from podr.utils import iTunesFeed
 
 
@@ -39,23 +38,9 @@ def index(request):
 
 
 def all(request):
-    all_podcasts_list = Podcast.objects.order_by('-title')[:5]
-
-    paginator = Paginator(all_podcasts_list, 20) # Show 20 contacts per page
-
-    page = request.GET.get('page')
-    try:
-        podcasts = paginator.page(page)
-    except PageNotAnInteger:
-        # If page is not an integer, deliver first page.
-        podcasts = paginator.page(1)
-    except EmptyPage:
-        # If page is out of range (e.g. 9999), deliver last page of results.
-        podcasts = paginator.page(paginator.num_pages)
-
+    all_categories = Category.objects.order_by('-title')
     context = {
-        'podcast_list': podcasts,
-        'form': AddPodcastForm()
+        'categories': all_categories
     }
     return render(request, 'podcast/all.html', context)
 
@@ -72,6 +57,28 @@ def add(request):
     podcast.save()
 
     return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast.id}))
+
+
+def category(request, category_id):
+    categorypodcasts_following_list = PodcastCategories.objects.filter(category=category_id).order_by("-podcast__title")
+
+    paginator = Paginator(categorypodcasts_following_list, 20) # Show 20 contacts per page
+
+    page = request.GET.get('page')
+    try:
+        categorypodcasts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        categorypodcasts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        categorypodcasts = paginator.page(paginator.num_pages)
+
+    context = {
+        'categorypodcasts': categorypodcasts,
+        'form': AddPodcastForm()
+    }
+    return render(request, 'podcast/category.html', context)
 
 
 def details(request, podcast_id):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from podr.models import Podcast, Episode, UserPodcast, UserEpisode
+from podr.models import Podcast, Episode, UserPodcast, UserEpisode, Category, PodcastCategories
 
 
 class EpisodeInline(admin.TabularInline):
@@ -7,7 +7,17 @@ class EpisodeInline(admin.TabularInline):
     extra = 3
 
 
-class SubscriptionAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('General',             {'fields': ['title', 'level', 'parent']}),
+    ]
+    list_display = ('title', 'level', 'parent')
+    search_fields = ['title']
+
+admin.site.register(Category, CategoryAdmin)
+
+
+class PodcastAdmin(admin.ModelAdmin):
     fieldsets = [
         ('General',             {'fields': ['title', 'link', 'copyright', 'description', 'language']}),
         ('iTunes information',  {'fields': ['itunes_author', 'itunes_subtitle', 'itunes_summary', 'itunes_image',
@@ -20,7 +30,8 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ('title', 'last_updated')
     search_fields = ['title']
 
-admin.site.register(Podcast, SubscriptionAdmin)
+admin.site.register(Podcast, PodcastAdmin)
+admin.site.register(PodcastCategories)
 
 
 class EpisodeAdmin(admin.ModelAdmin):
