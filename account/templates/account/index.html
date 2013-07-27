@@ -7,8 +7,8 @@
             <li class="active">Profile</li>
         </ul>
 
-        {% if user.first_name or user.last_name %}
-        <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+        {% if user.get_full_name %}
+        <h1>{{ user.get_full_name }}</h1>
         {% else %}
         <h1>{{ user.username }}</h1>
         {% endif %}
@@ -28,5 +28,20 @@
             <li>{{ following_podcasts }} podcasts followed</li>
             <li>{{ starred_episodes }} episodes starred</li>
         </ul>
+
+        <h2>Followed users</h2>
+        {% if user_users %}
+        <ul>
+            {% for user_user in user_users %}
+            {% if user_user.target.get_full_name %}
+            <li><a href="{% url 'account:user_profile' user_user.target.id %}" title="{{ user_user.target.get_full_name }}">{{ user_user.target.get_full_name }}</a></li>
+            {% elif user_user.target.username %}
+            <li><a href="{% url 'account:user_profile' user_user.target.id %}" title="{{ user_user.target.username }}">{{ user_user.target.username }}</a></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>You're not following any users</p>
+        {% endif %}
     </div>
 {% endblock %}

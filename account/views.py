@@ -26,6 +26,7 @@ def index(request):
         'podcast_thumbs_down': UserPodcast.objects.filter(user=request.user, rating=-1).count(),
         'podcast_thumbs_up': UserPodcast.objects.filter(user=request.user, rating=1).count(),
         'user_profile': UserProfile.objects.get_or_create(user=request.user),
+        'user_users': UserUser.objects.filter(source=request.user),
     }
     return render(request, 'account/index.html', context)
 
