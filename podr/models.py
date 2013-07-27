@@ -133,6 +133,7 @@ class UserUser(models.Model):
     source = models.ForeignKey(User, related_name='useruser_source')
     target = models.ForeignKey(User, related_name='useruser_target')
     following = models.BooleanField(default=False)
+    last_updated = models.DateTimeField('Last Updated', default=datetime.now())
 
     def __unicode__(self):
         return '%s - %s' % (self.source.username, self.target.username)

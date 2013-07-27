@@ -1,10 +1,11 @@
+from datetime import datetime
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
-from podr.models import UserPodcast, UserEpisode, UserProfile
+from podr.models import UserPodcast, UserEpisode, UserProfile, UserUser
 
 
 class LoginForm(forms.Form):
@@ -33,6 +34,17 @@ def index(request):
     #u = User.objects.get(username__exact='john')
     #u.set_password('new password')
     #u.save()
+
+
+@login_required(login_url='/account/login/')
+def follow(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    userUser, created = UserUser.objects.get_or_create(source=request.user, target=user)
+    userUser.following = True
+    userUser.last_updated = datetime.now()
+    userUser.save()
+
+    return redirect(reverse('account:user_profile', kwargs={'user_id': user_id}))
 
 
 # TODO: Add view
@@ -68,6 +80,17 @@ def logout_view(request):
 
 
 @login_required(login_url='/account/login/')
+def unfollow(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    userUser, created = UserUser.objects.get_or_create(source=request.user, target=user)
+    userUser.following = False
+    userUser.last_updated = datetime.now()
+    userUser.save()
+
+    return redirect(reverse('account:user_profile', kwargs={'user_id': user_id}))
+
+
+@login_required(login_url='/account/login/')
 def user_profile(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     userProfile, created = UserProfile.objects.get_or_create(user=user)
@@ -82,7 +105,7 @@ def user_profile(request, user_id):
         'starred_episodes': UserEpisode.objects.filter(user=user, starred=True).count(),
         'podcast_thumbs_down': UserPodcast.objects.filter(user=user, rating=-1).count(),
         'podcast_thumbs_up': UserPodcast.objects.filter(user=user, rating=1).count(),
-        'user_following': False,
+        'user_following': UserUser.objects.filter(source=request.user, target=user, following=True).exists(),
         'user_profile': userProfile,
     }
     return render(request, 'account/user_profile.html', context)
