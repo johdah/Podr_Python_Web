@@ -12,6 +12,13 @@
         {% else %}
             <h1>{{ user_profile.user.username }}</h1>
         {% endif %}
+        <p>
+            {% if user_following %}
+                <a href="{% url 'account:unfollow' user_profile.user.id %}"><button class="btn btn-danger" type="button">Unfollow</button></a>
+            {% else %}
+                <a href="{% url 'account:follow' user_profile.user.id %}"><button class="btn btn-success" type="button">Follow</button></a>
+            {% endif %}
+        </p>
 
         <h2>Statistics</h2>
         <ul>

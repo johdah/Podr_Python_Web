@@ -127,3 +127,11 @@ class UserEpisode(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.user.username, self.episode.title)
+
+
+class UserFollowing(models.Model):
+    user = models.ForeignKey(User)
+    followed_user = models.ForeignKey(User)
+
+    def __unicode__(self):
+        return '%s - %s' % (self.user.username, self.followed_user.username)

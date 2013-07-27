@@ -82,6 +82,7 @@ def user_profile(request, user_id):
         'starred_episodes': UserEpisode.objects.filter(user=user, starred=True).count(),
         'podcast_thumbs_down': UserPodcast.objects.filter(user=user, rating=-1).count(),
         'podcast_thumbs_up': UserPodcast.objects.filter(user=user, rating=1).count(),
+        'user_following': False,
         'user_profile': userProfile,
     }
     return render(request, 'account/user_profile.html', context)
