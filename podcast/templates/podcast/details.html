@@ -22,6 +22,7 @@
                     {% endif %}
                 </a>
             </div>
+            <p>Last updated: {{ podcast.last_updated|date:"Y-m-d H:i:s" }}</p>
             <p>
                 {% if userpodcast.following %}
                     <a href="{% url 'podcast:unfollow' podcast.id %}"><button class="btn btn-danger" type="button">Unfollow</button></a>
@@ -51,9 +52,18 @@
                 <p>Parental Advisory</p>
             {% endif %}
             <p>{{ podcast.language }}</p>
-            <p class="muted">Categories</p>
+            <h3>Categories</h3>
+            {% if categories %}
+            <ul>
+                {% for podcast_category in podcast_categories %}
+                <li><a href="{% url 'podcast:category' podcast_category.category.id %}" title="{{ podcast_category.category.title }}">{{ podcast_category.category.title }}</a></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>Not categorized</p>
+            {% endif %}
+            <h3>Owner information</h3>
             <p><a href="mailto:{{ podcast.itunes_owner_email }}">{{ podcast.itunes_owner_name }}</a></p>
-            <p>Last updated: {{ podcast.last_updated|date:"Y-m-d H:i:s" }}</p>
             <p>{{ podcast.copyright }}</p>
 
             <h5>Links</h5>

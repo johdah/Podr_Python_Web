@@ -11,3 +11,6 @@ Python Libraries:
 - Rest Framework (http://django-rest-framework.org/)
 
 #- oauth2client (https://code.google.com/p/google-api-python-client)
+
+## Recommendations
+- Import the docs/categories.csv file to the podr_category table to get the iTunes categories.

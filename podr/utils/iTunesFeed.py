@@ -1,7 +1,7 @@
 from datetime import datetime
+from django.core.exceptions import ObjectDoesNotExist
 import urllib.request
 import xml.etree.ElementTree as ET
-from apiclient import model
 from podr.utils import utils
 from podr.models import Episode, Category
 
@@ -30,7 +30,7 @@ class iTunesFeedParser():
         root = ET.fromstring(html)[0]
         podcast = iTunesFeedParser.parseSubscription(podcast, root)
 
-        categories = iTunesFeedParser.parseCategories(podcast, list(root.iter("itunes:categories")))
+        categories = iTunesFeedParser.parseCategories(podcast, list(root.iterfind("itunes:category", XML_NS)))
 
         return podcast, categories
 
@@ -107,8 +107,8 @@ class iTunesFeedParser():
             if item.attrib.get('text') is not None:
                 category = item.attrib.get('text')
                 try:
-                    categories.append(Category.objects.get(title=category).id)
-                except model.DoesNotExist:
+                    categories.append(Category.objects.get(title=category))
+                except ObjectDoesNotExist:
                     continue
 
         return categories

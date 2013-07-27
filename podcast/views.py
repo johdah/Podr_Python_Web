@@ -56,14 +56,19 @@ def add(request):
     podcast, categories = iTunesFeed.iTunesFeedParser.parseChannel(podcast)
     podcast.save()
 
+    if not categories:
+        newCategory, created = Category.objects.get_or_create(title="Unknown")
+        categories.append(newCategory)
+
     for category in categories:
-        podcastCategory = PodcastCategories.objects.get_or_create(podcast=podcast, category=category)
+        PodcastCategories.objects.get_or_create(podcast=podcast, category=category,  defaults={'category': category, 'podcast': podcast})
 
     return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast.id}))
 
 
 def category(request, category_id):
-    categorypodcasts_following_list = PodcastCategories.objects.filter(category=category_id).order_by("-podcast__title")
+    category = get_object_or_404(Category, pk=category_id)
+    categorypodcasts_following_list = PodcastCategories.objects.filter(category=category).order_by("-podcast__title")
     category = get_object_or_404(Category, pk=category_id)
 
     paginator = Paginator(categorypodcasts_following_list, 20) # Show 20 contacts per page
@@ -89,7 +94,7 @@ def category(request, category_id):
 def details(request, podcast_id):
     podcast = get_object_or_404(Podcast, pk=podcast_id)
     podcastCategories = PodcastCategories.objects.filter(podcast=podcast)
-    userpodcast, created = UserPodcast.objects.get_or_create(podcast=podcast_id, user=request.user.id)
+    userpodcast, created = UserPodcast.objects.get_or_create(podcast=podcast, user=request.user)
 
     paginator = Paginator(podcast.sorted_episode_set, 50) # Show 25 contacts per page
 
