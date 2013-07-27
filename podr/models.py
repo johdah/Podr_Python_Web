@@ -61,6 +61,11 @@ class UserPodcast(models.Model):
     last_updated = models.DateTimeField('Last Updated', default=datetime.now())
 
 
+class UserProfile(models.Model):
+    user = models.ForeignKey(User)
+    public_profile = models.BooleanField(default=False)
+
+
 class Episode(models.Model):
     podcast = models.ForeignKey(Podcast)
     title = models.CharField(max_length=100)
