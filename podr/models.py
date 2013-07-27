@@ -60,10 +60,19 @@ class UserPodcast(models.Model):
     rating = models.IntegerField(default=0)
     last_updated = models.DateTimeField('Last Updated', default=datetime.now())
 
+    def __unicode__(self):
+        return '%s - %s' % (self.user.username, self.podcast.title)
+
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User)
     public_profile = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        if self.user.first_name or self.user.last_name:
+            return u'%s %s' % (self.user.first_name, self.user.last_name)
+        else:
+            return self.user.username
 
 
 class Episode(models.Model):
@@ -115,3 +124,6 @@ class UserEpisode(models.Model):
     playing_status = models.IntegerField(choices=PlayingStatus, default=PLAYING_UNPLAYED)
     playing_current_time = models.IntegerField(default=0)
     last_updated = models.DateTimeField('Last Updated', default=datetime.now())
+
+    def __unicode__(self):
+        return '%s - %s' % (self.user.username, self.episode.title)

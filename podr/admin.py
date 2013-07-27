@@ -1,5 +1,5 @@
 from django.contrib import admin
-from podr.models import Podcast, Episode, UserPodcast, UserEpisode, Category, PodcastCategories
+from podr.models import Podcast, Episode, UserPodcast, UserEpisode, Category, PodcastCategories, UserProfile
 
 
 class EpisodeInline(admin.TabularInline):
@@ -48,5 +48,6 @@ class EpisodeAdmin(admin.ModelAdmin):
 
 admin.site.register(Episode, EpisodeAdmin)
 
-admin.site.register(UserPodcast)
 admin.site.register(UserEpisode)
+admin.site.register(UserPodcast)
+admin.site.register(UserProfile)
