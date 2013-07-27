@@ -13,6 +13,9 @@ class Category(models.Model):
     def __unicode__(self):
         return self.title
 
+    def no_of_podcasts(self):
+        return self.podcastcategories_set.count()
+
 
 class Podcast(models.Model):
     title = models.CharField(max_length=100, default="Unknown")
@@ -45,6 +48,9 @@ class Podcast(models.Model):
 class PodcastCategories(models.Model):
     category = models.ForeignKey(Category)
     podcast = models.ForeignKey(Podcast)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.category.title, self.podcast.title)
 
 
 class UserPodcast(models.Model):

@@ -30,7 +30,7 @@
                 {% for category in categories %}
                     <tr>
                         <td><a href="{% url 'podcast:category' category.id %}">{{ category.title }}</a></td>
-                        <td>???</td>
+                        <td>{{ category.no_of_podcasts }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

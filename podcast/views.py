@@ -38,7 +38,7 @@ def index(request):
 
 
 def all(request):
-    all_categories = Category.objects.order_by('-title')
+    all_categories = Category.objects.order_by('title')
     context = {
         'categories': all_categories
     }
@@ -61,6 +61,7 @@ def add(request):
 
 def category(request, category_id):
     categorypodcasts_following_list = PodcastCategories.objects.filter(category=category_id).order_by("-podcast__title")
+    category = get_object_or_404(Category, pk=category_id)
 
     paginator = Paginator(categorypodcasts_following_list, 20) # Show 20 contacts per page
 
@@ -75,6 +76,7 @@ def category(request, category_id):
         categorypodcasts = paginator.page(paginator.num_pages)
 
     context = {
+        'category': category,
         'categorypodcasts': categorypodcasts,
         'form': AddPodcastForm()
     }
