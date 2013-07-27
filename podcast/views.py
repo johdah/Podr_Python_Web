@@ -53,8 +53,11 @@ def all(request):
 def add(request):
     podcast, created = Podcast.objects.get_or_create(link=request.POST['link'], defaults={'link': request.POST['link']})
 
-    podcast = iTunesFeed.iTunesFeedParser.parseChannel(podcast)
+    podcast, categories = iTunesFeed.iTunesFeedParser.parseChannel(podcast)
     podcast.save()
+
+    for category in categories:
+        podcastCategory = PodcastCategories.objects.get_or_create(podcast=podcast, category=category)
 
     return redirect(reverse('podcast:details', kwargs={'podcast_id': podcast.id}))
 
@@ -85,6 +88,7 @@ def category(request, category_id):
 
 def details(request, podcast_id):
     podcast = get_object_or_404(Podcast, pk=podcast_id)
+    podcastCategories = PodcastCategories.objects.filter(podcast=podcast)
     userpodcast, created = UserPodcast.objects.get_or_create(podcast=podcast_id, user=request.user.id)
 
     paginator = Paginator(podcast.sorted_episode_set, 50) # Show 25 contacts per page
@@ -101,6 +105,7 @@ def details(request, podcast_id):
 
     context = {
         'podcast': podcast,
+        'podcast_categories': podcastCategories,
         'userpodcast': userpodcast,
         'episodes': episodes,
         'thumbs_down': UserPodcast.objects.filter(podcast=podcast, rating=-1).count(),

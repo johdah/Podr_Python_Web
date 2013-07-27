@@ -1,8 +1,9 @@
 from datetime import datetime
 import urllib.request
 import xml.etree.ElementTree as ET
+from apiclient import model
 from podr.utils import utils
-from podr.models import Episode
+from podr.models import Episode, Category
 
 XML_NS = {
     'itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd',
@@ -29,7 +30,9 @@ class iTunesFeedParser():
         root = ET.fromstring(html)[0]
         podcast = iTunesFeedParser.parseSubscription(podcast, root)
 
-        return podcast
+        categories = iTunesFeedParser.parseCategories(podcast, list(root.iter("itunes:categories")))
+
+        return podcast, categories
 
     @staticmethod
     def parseSubscription(podcast, root):
@@ -95,6 +98,20 @@ class iTunesFeedParser():
         podcast.last_updated = datetime.now()
 
         return podcast
+
+
+    def parseCategories(podcast, items):
+        categories = []
+
+        for item in items:
+            if item.attrib.get('text') is not None:
+                category = item.attrib.get('text')
+                try:
+                    categories.append(Category.objects.get(title=category).id)
+                except model.DoesNotExist:
+                    continue
+
+        return categories
 
 
     def parseEpisodes(podcast, items):
