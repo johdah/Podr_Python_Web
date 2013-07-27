@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">Home</a> <span class="divider">/</span></li>
+            <li class="active">Profile</li>
+        </ul>
+
+        {% if user_profile.user.first_name or user_profile.user.last_name %}
+            <h1>{{ user_profile.user.first_name }} {{ user_profile.user.last_name }}</h1>
+        {% else %}
+            <h1>{{ user_profile.user.username }}</h1>
+        {% endif %}
+
+        <h2>Statistics</h2>
+        <ul>
+            <li>{{ episode_thumbs_up }} thumbs up on episodes</li>
+            <li>{{ podcast_thumbs_up }} thumbs up on podcasts</li>
+            <li>{{ episode_thumbs_down }} thumbs down on episodes</li>
+            <li>{{ podcast_thumbs_down }} thumbs down on podcasts</li>
+            <li>{{ following_podcasts }} podcasts followed</li>
+            <li>{{ starred_episodes }} episodes starred</li>
+        </ul>
+    </div>
+{% endblock %}

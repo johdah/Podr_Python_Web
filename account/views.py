@@ -1,9 +1,10 @@
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.shortcuts import render, redirect
-from podr.models import UserPodcast, UserEpisode
+from django.shortcuts import render, redirect, get_object_or_404
+from podr.models import UserPodcast, UserEpisode, UserProfile
 
 
 class LoginForm(forms.Form):
@@ -17,12 +18,13 @@ class LoginForm(forms.Form):
 @login_required(login_url='/account/login/')
 def index(request):
     context = {
-        'following_podcasts': UserPodcast.objects.filter(user=request.user).count(),
-        'starred_episodes': UserEpisode.objects.filter(user=request.user, starred=True).count(),
         'episode_thumbs_down': UserEpisode.objects.filter(user=request.user, rating=-1).count(),
         'episode_thumbs_up': UserEpisode.objects.filter(user=request.user, rating=1).count(),
+        'following_podcasts': UserPodcast.objects.filter(user=request.user).count(),
+        'starred_episodes': UserEpisode.objects.filter(user=request.user, starred=True).count(),
         'podcast_thumbs_down': UserPodcast.objects.filter(user=request.user, rating=-1).count(),
         'podcast_thumbs_up': UserPodcast.objects.filter(user=request.user, rating=1).count(),
+        'user_profile': UserProfile.objects.get_or_create(user=request.user),
     }
     return render(request, 'account/index.html', context)
 
@@ -63,6 +65,26 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect(reverse('podr:index'))
+
+
+@login_required(login_url='/account/login/')
+def user_profile(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    userProfile, created = UserProfile.objects.get_or_create(user=user)
+
+    if not userProfile.public_profile:
+        return render(request, 'account/user_profile_private.html')
+
+    context = {
+        'episode_thumbs_down': UserEpisode.objects.filter(user=user, rating=-1).count(),
+        'episode_thumbs_up': UserEpisode.objects.filter(user=user, rating=1).count(),
+        'following_podcasts': UserPodcast.objects.filter(user=user).count(),
+        'starred_episodes': UserEpisode.objects.filter(user=user, starred=True).count(),
+        'podcast_thumbs_down': UserPodcast.objects.filter(user=user, rating=-1).count(),
+        'podcast_thumbs_up': UserPodcast.objects.filter(user=user, rating=1).count(),
+        'user_profile': userProfile,
+    }
+    return render(request, 'account/user_profile.html', context)
 
 
 #def register(request):
