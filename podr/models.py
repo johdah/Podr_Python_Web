@@ -129,9 +129,10 @@ class UserEpisode(models.Model):
         return '%s - %s' % (self.user.username, self.episode.title)
 
 
-class UserFollowing(models.Model):
-    user = models.ForeignKey(User)
-    followed_user = models.ForeignKey(User)
+class UserUser(models.Model):
+    source = models.ForeignKey(User, related_name='useruser_source')
+    target = models.ForeignKey(User, related_name='useruser_target')
+    following = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return '%s - %s' % (self.user.username, self.followed_user.username)
+        return '%s - %s' % (self.source.username, self.target.username)
