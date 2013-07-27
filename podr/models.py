@@ -67,6 +67,8 @@ class UserPodcast(models.Model):
 class UserProfile(models.Model):
     user = models.ForeignKey(User)
     public_profile = models.BooleanField(default=False)
+    share_episodes = models.BooleanField(default=True)
+    share_podcasts = models.BooleanField(default=True)
 
     def __unicode__(self):
         if self.user.first_name or self.user.last_name:
