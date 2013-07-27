@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from podr.models import Episode, Podcast, UserPodcast, UserEpisode
+from podr.models import Episode, Podcast, UserPodcast, UserEpisode, Category, PodcastCategories
+
+
+class CategorySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Category
+        fields = ('id', 'title', 'level', 'parent')
 
 
 class EpisodeSerializer(serializers.HyperlinkedModelSerializer):
@@ -10,6 +16,15 @@ class EpisodeSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'title', 'podcast', 'guid', 'enclosureUrl', 'enclosureType', 'enclosureLength', 'itunes_author',
                   'itunes_block', 'itunes_duration', 'itunes_itunesIsClosedCaption', 'itunes_image', 'itunes_explicit',
                   'itunes_subtitle', 'itunes_summary', 'pub_date')
+
+
+class PodcastCategoriesSerializer(serializers.HyperlinkedModelSerializer):
+    category = serializers.Field(source='category.id')
+    podcast = serializers.Field(source='podcast.id')
+
+    class Meta:
+        model = PodcastCategories
+        fields = ('id', 'category', 'podcast')
 
 
 class UserEpisodeSerializer(serializers.HyperlinkedModelSerializer):
