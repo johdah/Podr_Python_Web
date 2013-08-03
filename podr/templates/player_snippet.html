@@ -1,21 +1,26 @@
 <div id="player-bar" class="navbar navbar-inverse navbar-fixed-bottom">
     <div id="player-container" class="container">
-        <audio id="player-audio" controls="controls">
-            <source src="#" type="audio/mpeg" />
-            Your browser does not support the audio element.
-        </audio>
+        <div class="col-lg-2">
+            <a class="pull-left" href="#">
+                <img id="player-cover" class="media-object" src="images/cover.jpg" alt="Player Cover">
+            </a>
+        </div>
+        <div class="col-lg-9">
+            <audio id="player-audio" controls="controls">
+                <source src="#" type="audio/mpeg" />
+                Your browser does not support the audio element.
+            </audio>
 
-        <div id="player-controls">
-            <a id="play" href="" title=""></a>
-            <a id="mute" href="" title=""></a>
-            <input type="range" id="seek" value="0" max=""/>
-            <a id="close" href="" title=""></a>
-        </div><!-- / player-controls-->
+            <div id="player-controls">
+                <a id="play" href="" title=""></a>
+                <a id="mute" href="" title=""></a>
+                <input type="range" id="seek" value="0" max=""/>
+                <a id="close" href="" title=""></a>
+            </div><!-- / player-controls-->
 
-        <img id="player-cover" class="img-responsive" src="images/cover.jpg" alt="">
-
-        <!-- <div class="progress progress-striped active">
-          <div class="progress-bar" style="width: 45%"></div>
-        </div> -->
+            <!-- <div class="progress progress-striped active">
+              <div class="progress-bar" style="width: 45%"></div>
+            </div> -->
+        </div>
     </div>
 </div>
