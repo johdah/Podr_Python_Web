@@ -6,7 +6,11 @@
         <li class="active">Home</li>
     </ul>
 
-    <h1>PodR <small>The best Podcast Manager</small></h1>
-    <p><a href="{% url 'podcast:index' %}">Go to podcast list</a></p>
+    <div class="jumbotron">
+        <h1>PodR <small>The best Podcast Manager</small></h1>
+        <p>...</p>
+        <p><a href="{% url 'podcast:index' %}" class="btn btn-primary btn-large">Go to podcast list</a></p>
+    </div>
+
 </div>
 {% endblock %}
