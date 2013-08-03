@@ -18,7 +18,7 @@ class AddPodcastForm(forms.Form):
 
 def index(request):
     #podcasts_following_list = Podcast.objects.filter.order_by('-title')[:5]
-    podcasts_following_list = UserPodcast.objects.filter(user=request.user.id).order_by("-podcast__title")
+    podcasts_following_list = UserPodcast.objects.filter(user=request.user.id).order_by("podcast__title")
 
     paginator = Paginator(podcasts_following_list, 20) # Show 20 contacts per page
 
@@ -70,7 +70,7 @@ def add(request):
 
 def category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
-    categorypodcasts_following_list = PodcastCategories.objects.filter(category=category).order_by("-podcast__title")
+    categorypodcasts_following_list = PodcastCategories.objects.filter(category=category).order_by("podcast__title")
     category = get_object_or_404(Category, pk=category_id)
 
     paginator = Paginator(categorypodcasts_following_list, 20) # Show 20 contacts per page

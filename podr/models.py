@@ -63,6 +63,9 @@ class UserPodcast(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.user.username, self.podcast.title)
 
+    def no_of_unarchived(self):
+        return UserEpisode.objects.filter(user=self.user, episode__podcast=self.podcast, archived=False).count()
+
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User)

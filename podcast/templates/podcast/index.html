@@ -27,7 +27,8 @@
                 <img class="img-responsive" data-src="{% static "podr/js/holder.js/260x180" %}" alt="">
                 {% endif %}
                 <div class="caption">
-                    <h3><a href="{% url 'podcast:details' userpodcast.podcast.id %}">{{ userpodcast.podcast.title }}</a></h3>
+                    <h3><a href="{% url 'podcast:details' userpodcast.podcast.id %}">
+                        <span class="badge pull-right">{{ userpodcast.no_of_unarchived }}</span>{{ userpodcast.podcast.title }}</a></h3>
                     {% if userpodcast.podcast.itunes_subtitle %}
                         <p>{{ userpodcast.podcast.itunes_subtitle|truncatechars:120 }}</p>
                     {% elif userpodcast.podcast.itunes_summary %}
