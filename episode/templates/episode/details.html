@@ -5,109 +5,109 @@
 {% block title %}PodR - {{ episode.title }}{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <ul class="breadcrumb">
-            <li><a href="/">Home</a> <span class="divider">/</span></li>
-            <li><a href="{% url 'podcast:details' episode.podcast.id %}">{{ episode.podcast.title }}</a> <span class="divider">/</span></li>
-            <li class="active">{{ episode.title }}</li>
-        </ul>
+<div class="container">
+    <ul class="breadcrumb">
+        <li><a href="/">Home</a> <span class="divider"></span></li>
+        <li><a href="{% url 'podcast:details' episode.podcast.id %}">{{ episode.podcast.title }}</a> <span class="divider"></span></li>
+        <li class="active">{{ episode.title }}</li>
+    </ul>
 
-        <div class="row-fluid">
-            <div class="span3">
-                <div class="itunes-image thumbnails span12">
-                    <a href="#" class="thumbnail">
-                        {% if episode.itunes_image %}
-                            <img src="{{ episode.itunes_image }}" id="episode-cover" alt="" width="260">
-                        {% elif episode.podcast.itunes_image %}
-                            <img src="{{ episode.podcast.itunes_image }}" id="episode-cover" alt="" width="260">
-                        {% else %}
-                            <img data-src="{% static "podr/js/holder.js/240x240" %}" id="episode-cover" alt="">
-                        {% endif %}
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="itunes-image thumbnails span12">
+                <a href="#" class="thumbnail">
+                    {% if episode.itunes_image %}
+                        <img src="{{ episode.itunes_image }}" id="episode-cover" alt="" width="260">
+                    {% elif episode.podcast.itunes_image %}
+                        <img src="{{ episode.podcast.itunes_image }}" id="episode-cover" alt="" width="260">
+                    {% else %}
+                        <img data-src="{% static "podr/js/holder.js/240x240" %}" id="episode-cover" alt="">
+                    {% endif %}
+                </a>
+            </div>
+            <p>
+                {% if userepisode and userepisode.archived %}
+                    <a href="{% url 'episode:unarchive' episode.id %}"><button class="btn btn-success" type="button">Unarchive</button></a>
+                {% elif userepisode and not userepisode.archived %}
+                    <a href="{% url 'episode:archive' episode.id %}"><button class="btn btn-danger" type="button">Archive</button></a>
+                {% else %}
+                    <a href="{% url 'episode:unarchive' episode.id %}"><button class="btn btn-success" type="button">Add</button></a>
+                {% endif %}
+
+                {% if userepisode and userepisode.starred %}
+                    <a href="{% url 'episode:unstar' episode.id %}"><button class="btn btn-danger" type="button">Unstar</button></a>
+                {% else %}
+                    <a href="{% url 'episode:star' episode.id %}"><button class="btn btn-success" type="button">Star</button></a>
+                {% endif %}
+            </p>
+            <p>
+                {% if userepisode.rating == 1 %}
+                    <a class="btn btn-default btn-small disabled" href="{% url 'episode:thumb_up' episode.id %}"><i class="glyphicon glyphicon-thumbs-up"></i> Like</a>
+                {% else %}
+                    <a class="btn btn-default btn-small" href="{% url 'episode:thumb_up' episode.id %}"><i class="glyphicon glyphicon-thumbs-up"></i> Like</a>
+                {% endif %}
+                {% if userepisode.rating == -1 %}
+                    <a class="btn btn-default btn-small disabled" href="{% url 'episode:thumb_down' episode.id %}"><i class="glyphicon glyphicon-thumbs-down"></i> Dislike</a>
+                {% else %}
+                    <a class="btn btn-default btn-small" href="{% url 'episode:thumb_down' episode.id %}"><i class="glyphicon glyphicon-thumbs-down"></i> Dislike</a>
+                {% endif %}
+            </p>
+
+            <p>Rating: <span><i class="glyphicon glyphicon-thumbs-up"></i> {{ thumbs_up }}</span> <span><i class="glyphicon glyphicon-thumbs-down"></i> {{ thumbs_down }}</span></p>
+            {% if episode.itunes_explicit %}
+                <p>Parental Advisory</p>
+            {% endif %}
+            <p>Language: {{ episode.subscription.language }}</p>
+            <p class="muted">Categories</p>
+            <h5>Author</h5>
+            <p><a href="mailto:{{ episode.itunes_owner_email }}">{{ episode.itunes_owner_name }}</a></p>
+            <p>{{ episode.subscription.copyright }}</p>
+        </div>
+        <div class="col-lg-9">
+            <div class="page-header">
+                <h1><span id="episode_title">{{ episode.title }}</span> <small id="episode_id">{{ episode.id }}</small></h1>
+            </div>
+
+            {% if episode.itunes_author %}
+                <h4>{{ episode.subscription.title }} - {{ episode.itunes_author }}</h4>
+            {% elif episode.subscription.itunes_author %}
+                <h4>{{ episode.subscription.title }} - {{ episode.subscription.itunes_author }}</h4>
+            {% else %}
+                <h4>{{ episode.subscription.title }}</h4>
+            {% endif %}
+
+            <p><em>{{ episode.pub_date|naturaltime }}</em></p>
+
+            {% if episode.itunes_block %}
+            <p>This episode is marked as blocked by the author</p>
+            {% endif %}
+
+            {% if episode.itunes_itunesIsClosedCaption %}
+            <p>This episode is closed caption</p>
+            {% endif %}
+
+            <h4>Description</h4>
+            {% if episode.itunes_summary %}
+                <p>{{ episode.itunes_summary|safe }}</p>
+            {% else %}
+                <p>{{ episode.itunes_subtitle|safe }}</p>
+            {% endif %}
+
+            <hr />
+            <p>
+                <a onclick="javascript:loadEpisode()"><button class="btn btn-success" type="button">Play</button></a>
+                <a href="{{ episode.enclosureUrl }}" id="enclosure_url"><button class="btn btn-success" type="button">Download</button></a>
+            </p>
+            <p>Duration: {{ episode.itunes_duration_as_string }} <span id="enclosure_type">({{ episode.enclosureType }})</span></p>
+
+            <ul class="record_actions">
+                <li>
+                    <a href="{% url 'podcast:details' episode.podcast.id %}">
+                        Back to {{ episode.podcast.title }}
                     </a>
-                </div>
-                <p>
-                    {% if userepisode and userepisode.archived %}
-                        <a href="{% url 'episode:unarchive' episode.id %}"><button class="btn btn-success" type="button">Unarchive</button></a>
-                    {% elif userepisode and not userepisode.archived %}
-                        <a href="{% url 'episode:archive' episode.id %}"><button class="btn btn-danger" type="button">Archive</button></a>
-                    {% else %}
-                        <a href="{% url 'episode:unarchive' episode.id %}"><button class="btn btn-success" type="button">Add</button></a>
-                    {% endif %}
-
-                    {% if userepisode and userepisode.starred %}
-                        <a href="{% url 'episode:unstar' episode.id %}"><button class="btn btn-danger" type="button">Unstar</button></a>
-                    {% else %}
-                        <a href="{% url 'episode:star' episode.id %}"><button class="btn btn-success" type="button">Star</button></a>
-                    {% endif %}
-                </p>
-                <p>
-                    {% if userepisode.rating == 1 %}
-                        <a class="btn btn-small disabled" href="{% url 'episode:thumb_up' episode.id %}"><i class="icon-thumbs-up"></i> Like</a>
-                    {% else %}
-                        <a class="btn btn-small" href="{% url 'episode:thumb_up' episode.id %}"><i class="icon-thumbs-up"></i> Like</a>
-                    {% endif %}
-                    {% if userepisode.rating == -1 %}
-                        <a class="btn btn-small disabled" href="{% url 'episode:thumb_down' episode.id %}"><i class="icon-thumbs-down"></i> Dislike</a>
-                    {% else %}
-                        <a class="btn btn-small" href="{% url 'episode:thumb_down' episode.id %}"><i class="icon-thumbs-up"></i> Dislike</a>
-                    {% endif %}
-                </p>
-
-                <p>Rating: <span><i class="icon-thumbs-up"></i> {{ thumbs_up }}</span> <span><i class="icon-thumbs-down"></i> {{ thumbs_down }}</span></p>
-                {% if episode.itunes_explicit %}
-                    <p>Parental Advisory</p>
-                {% endif %}
-                <p>Language: {{ episode.subscription.language }}</p>
-                <p class="muted">Categories</p>
-                <h5>Author</h5>
-                <p><a href="mailto:{{ episode.itunes_owner_email }}">{{ episode.itunes_owner_name }}</a></p>
-                <p>{{ episode.subscription.copyright }}</p>
-            </div>
-            <div class="span9">
-                <div class="page-header">
-                    <h1><span id="episode_title">{{ episode.title }}</span> <small id="episode_id">{{ episode.id }}</small></h1>
-                </div>
-
-                {% if episode.itunes_author %}
-                    <h4>{{ episode.subscription.title }} - {{ episode.itunes_author }}</h4>
-                {% elif episode.subscription.itunes_author %}
-                    <h4>{{ episode.subscription.title }} - {{ episode.subscription.itunes_author }}</h4>
-                {% else %}
-                    <h4>{{ episode.subscription.title }}</h4>
-                {% endif %}
-
-                <p><em>{{ episode.pub_date|naturaltime }}</em></p>
-
-                {% if episode.itunes_block %}
-                <p>This episode is marked as blocked by the author</p>
-                {% endif %}
-
-                {% if episode.itunes_itunesIsClosedCaption %}
-                <p>This episode is closed caption</p>
-                {% endif %}
-
-                <h4>Description</h4>
-                {% if episode.itunes_summary %}
-                    <p>{{ episode.itunes_summary|safe }}</p>
-                {% else %}
-                    <p>{{ episode.itunes_subtitle|safe }}</p>
-                {% endif %}
-
-                <hr />
-                <p>
-                    <a onclick="javascript:loadEpisode()"><button class="btn btn-success" type="button">Play</button></a>
-                    <a href="{{ episode.enclosureUrl }}" id="enclosure_url"><button class="btn btn-success" type="button">Download</button></a>
-                </p>
-                <p>Duration: {{ episode.itunes_duration_as_string }} <span id="enclosure_type">({{ episode.enclosureType }})</span></p>
-
-                <ul class="record_actions">
-                    <li>
-                        <a href="{% url 'podcast:details' episode.podcast.id %}">
-                            Back to {{ episode.podcast.title }}
-                        </a>
-                    </li>
-                </ul>
-            </div>
+                </li>
+            </ul>
         </div>
     </div>
+</div>
 {% endblock %}

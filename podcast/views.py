@@ -11,7 +11,9 @@ from podr.utils import iTunesFeed
 
 
 class AddPodcastForm(forms.Form):
-    link = forms.CharField(max_length=255)
+    link = forms.CharField(
+                    max_length=255,
+                    widget=forms.TextInput(attrs={'class': 'form-control'}))
 
 
 def index(request):

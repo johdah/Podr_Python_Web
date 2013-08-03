@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <ul class="breadcrumb">
-            <li><a href="/">Home</a> <span class="divider">/</span></li>
+            <li><a href="/">Home</a> <span class="divider"></span></li>
             <li class="active">Episodes</li>
         </ul>
 
@@ -16,48 +16,46 @@
         </ul>
 
         {% if episodes %}
-            <table class="records_list table table-striped">
-                <caption>Top rated episodes</caption>
-                <thead>
+        <table class="records_list table table-striped">
+            <caption>Top rated episodes</caption>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Subscription</th>
+                <th>Published</th>
+                <th>Rating</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for episode in episodes %}
                 <tr>
-                    <th>Title</th>
-                    <th>Subscription</th>
-                    <th>Published</th>
-                    <th>Rating</th>
-                    <th></th>
+                    <td><a href="{% url 'episode:details' episode.id %}">{{ episode.title }}</a></td>
+                    <td><a href="{% url 'podcast:details' episode.podcast.id %}">{{ episode.podcast.title }}</a></td>
+                    <td>{% if episode.pub_date %}{{ episode.pub_date|date:"Y-m-d H:i:s" }}{% endif %}</td>
+                    <td>{{ episode.total_rating.rating__sum }}</td>
+                    <td></td>
                 </tr>
-                </thead>
-                <tbody>
+            {% endfor %}
+            </tbody>
+        </table>
 
-                {% for episode in episodes %}
-                    <tr>
-                        <td><a href="{% url 'episode:details' episode.id %}">{{ episode.title }}</a></td>
-                        <td><a href="{% url 'podcast:details' episode.podcast.id %}">{{ episode.podcast.title }}</a></td>
-                        <td>{% if episode.pub_date %}{{ episode.pub_date|date:"Y-m-d H:i:s" }}{% endif %}</td>
-                        <td>{{ episode.total_rating.rating__sum }}</td>
-                        <td></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+        <ul class="pager">
+            {% if episodes.has_previous %}
+            <li class="previous"><a href="?page={{ episodes.previous_page_number }}">&larr; Older</a></li>
+            {% else %}
+            <li class="previous disabled"><a href="#">&larr; Older</a></li>
+            {% endif %}
 
-            <ul class="pager">
-                {% if episodes.has_previous %}
-                    <li class="previous"><a href="?page={{ episodes.previous_page_number }}">&larr; Older</a></li>
-                {% else %}
-                    <li class="previous disabled">&larr; Older</li>
-                {% endif %}
+            <span class="current">Page {{ episodes.number }} of {{ episodes.paginator.num_pages }}</span>
 
-                <span class="current">
-                Page {{ episodes.number }} of {{ episodes.paginator.num_pages }}.
-            </span>
-
-                {% if episodes.has_next %}
-                    <li class="next"><a href="?page={{ episodes.next_page_number }}">Newer &rarr;</a></li>
-                {% else %}
-                    <li class="next disabled">Newer &rarr;</li>
-                {% endif %}
-            </ul>
+            {% if episodes.has_next %}
+            <li class="next"><a href="?page={{ episodes.next_page_number }}">Newer &rarr;</a></li>
+            {% else %}
+            <li class="next disabled"><a href="#">Newer &rarr;</a></li>
+            {% endif %}
+        </ul>
         {% else %}
             <p>No episodes are available.</p>
         {% endif %}

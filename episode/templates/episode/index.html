@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <ul class="breadcrumb">
-            <li><a href="/">Home</a> <span class="divider">/</span></li>
+            <li><a href="/">Home</a> <span class="divider"></span></li>
             <li class="active">Episodes</li>
         </ul>
 
@@ -41,19 +41,17 @@
 
         <ul class="pager">
             {% if episodes.has_previous %}
-                <li class="previous"><a href="?page={{ episodes.previous_page_number }}">&larr; Older</a></li>
+            <li class="previous"><a href="?page={{ episodes.previous_page_number }}">&larr; Older</a></li>
             {% else %}
-                <li class="previous disabled">&larr; Older</li>
+            <li class="previous disabled"><a href="#">&larr; Older</a></li>
             {% endif %}
 
-            <span class="current">
-                Page {{ episodes.number }} of {{ episodes.paginator.num_pages }}.
-            </span>
+            <span class="current">Page {{ episodes.number }} of {{ episodes.paginator.num_pages }}</span>
 
             {% if episodes.has_next %}
-                <li class="next"><a href="?page={{ episodes.next_page_number }}">Newer &rarr;</a></li>
+            <li class="next"><a href="?page={{ episodes.next_page_number }}">Newer &rarr;</a></li>
             {% else %}
-                <li class="next disabled">Newer &rarr;</li>
+            <li class="next disabled"><a href="#">Newer &rarr;</a></li>
             {% endif %}
         </ul>
         {% else %}

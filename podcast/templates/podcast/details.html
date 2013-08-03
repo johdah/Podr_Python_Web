@@ -6,13 +6,13 @@
 {% block content %}
 <div class="container">
     <ul class="breadcrumb">
-        <li><a href="/">Home</a> <span class="divider">/</span></li>
-        <li><a href="{% url 'podcast:index' %}">Podcast</a> <span class="divider">/</span></li>
+        <li><a href="/">Home</a> <span class="divider"></span></li>
+        <li><a href="{% url 'podcast:index' %}">Podcast</a> <span class="divider"></span></li>
         <li class="active">{{ podcast.title }}</li>
     </ul>
 
-    <div class="row-fluid">
-        <div class="span3">
+    <div class="row">
+        <div class="col-lg-3">
             <div class="itunes-image thumbnails span12">
                 <a href="#" class="thumbnail">
                     {% if podcast.itunes_image %}
@@ -36,18 +36,18 @@
             </p>
             <p>
                 {% if userpodcast.rating == 1 %}
-                <a class="btn btn-small disabled" href="{% url 'podcast:thumb_up' podcast.id %}"><i class="icon-thumbs-up"></i> Like</a>
+                <a class="btn btn-default btn-small disabled" href="{% url 'podcast:thumb_up' podcast.id %}"><i class="glyphicon glyphicon-thumbs-up"></i> Like</a>
                 {% else %}
-                <a class="btn btn-small" href="{% url 'podcast:thumb_up' podcast.id %}"><i class="icon-thumbs-up"></i> Like</a>
+                <a class="btn btn-default btn-small" href="{% url 'podcast:thumb_up' podcast.id %}"><i class="glyphicon glyphicon-thumbs-up"></i> Like</a>
                 {% endif %}
                 {% if userpodcast.rating == -1 %}
-                <a class="btn btn-small disabled" href="{% url 'podcast:thumb_down' podcast.id %}"><i class="icon-thumbs-down"></i> Dislike</a>
+                <a class="btn btn-default btn-small disabled" href="{% url 'podcast:thumb_down' podcast.id %}"><i class="glyphicon glyphicon-thumbs-down"></i> Dislike</a>
                 {% else %}
-                <a class="btn btn-small" href="{% url 'podcast:thumb_down' podcast.id %}"><i class="icon-thumbs-up"></i> Dislike</a>
+                <a class="btn btn-default btn-small" href="{% url 'podcast:thumb_down' podcast.id %}"><i class="glyphicon glyphicon-thumbs-down"></i> Dislike</a>
                 {% endif %}
             </p>
 
-            <p>Rating: <span><i class="icon-thumbs-up"></i> {{ thumbs_up }}</span> <span><i class="icon-thumbs-down"></i> {{ thumbs_down }}</span></p>
+            <p>Rating: <span><i class="glyphicon glyphicon-thumbs-up"></i> {{ thumbs_up }}</span> <span><i class="glyphicon glyphicon-thumbs-down"></i> {{ thumbs_down }}</span></p>
             {% if podcast.itunes_explicit %}
                 <p>Parental Advisory</p>
             {% endif %}
@@ -69,7 +69,7 @@
             <h5>Links</h5>
             <p class="muted"><a href="{{ podcast.link }}">Feed</a></p>
         </div>
-        <div class="span9">
+        <div class="col-lg-9">
             <h1>{{ podcast.title }}</h1>
             <h4>{{ podcast.itunes_author }}</h4>
 
@@ -121,19 +121,17 @@
 
             <ul class="pager">
                 {% if episodes.has_previous %}
-                    <li class="previous"><a href="?page={{ episodes.previous_page_number }}">&larr; Older</a></li>
+                <li class="previous"><a href="?page={{ episodes.previous_page_number }}">&larr; Older</a></li>
                 {% else %}
-                    <li class="previous disabled">&larr; Older</li>
+                <li class="previous disabled"><a href="#">&larr; Older</a></li>
                 {% endif %}
 
-                <span class="current">
-                    Page {{ episodes.number }} of {{ episodes.paginator.num_pages }}.
-                </span>
+                <span class="current">Page {{ episodes.number }} of {{ episodes.paginator.num_pages }}</span>
 
                 {% if episodes.has_next %}
-                    <li class="next"><a href="?page={{ episodes.next_page_number }}">Newer &rarr;</a></li>
+                <li class="next"><a href="?page={{ episodes.next_page_number }}">Newer &rarr;</a></li>
                 {% else %}
-                    <li class="next disabled">Newer &rarr;</li>
+                <li class="next disabled"><a href="#">Newer &rarr;</a></li>
                 {% endif %}
             </ul>
 

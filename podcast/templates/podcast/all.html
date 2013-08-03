@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container">
         <ul class="breadcrumb">
-            <li><a href="{% url 'podr:index' %}">Home</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'podr:index' %}">Home</a> <span class="divider"></span></li>
             <li class="active">Podcasts</li>
         </ul>
 
@@ -17,24 +17,23 @@
         </ul>
 
         {% if categories %}
-            <table class="records_list table table-striped">
-                <caption>All categories</caption>
-                <thead>
+        <table class="records_list table table-striped">
+            <caption>All categories</caption>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for category in categories %}
                 <tr>
-                    <th>Title</th>
-                    <th></th>
+                    <td><a href="{% url 'podcast:category' category.id %}">{{ category.title }}</a></td>
+                    <td>{{ category.no_of_podcasts }}</td>
                 </tr>
-                </thead>
-                <tbody>
-
-                {% for category in categories %}
-                    <tr>
-                        <td><a href="{% url 'podcast:category' category.id %}">{{ category.title }}</a></td>
-                        <td>{{ category.no_of_podcasts }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+            {% endfor %}
+            </tbody>
+        </table>
         {% else %}
             <p>No categories are available.</p>
         {% endif %}

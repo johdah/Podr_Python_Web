@@ -7,8 +7,8 @@
 
     {% block stylesheets %}
         <link href="{% static "podr/css/bootstrap.min.css" %}" type="text/css" rel="stylesheet" />
+        <link href="{% static "podr/css/bootstrap-glyphicons.css" %}" type="text/css" rel="stylesheet" />
         <link href="{% static "podr/css/layout.css" %}" type="text/css" rel="stylesheet" />
-        <link href="{% static "podr/css/bootstrap-responsive.min.css" %}" type="text/css" rel="stylesheet" />
         <link href="{% static "podr/css/custom-audioplayer.css" %}" type="text/css" rel="stylesheet" />
     {% endblock %}
 
@@ -22,22 +22,20 @@
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
+    <div class="container">
+        <!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
 
-            <!-- Be sure to leave the brand out there if you want it shown -->
-            <a class="brand" href="{% url 'podr:index' %}">PodR</a>
+        <a class="navbar-brand" href="{% url 'podr:index' %}">PodR</a>
 
-            <!-- Everything you want hidden at 940px or less, place within here -->
-            <div class="nav-collapse collapse">
-                {% if user.is_authenticated %}
-                <ul class="nav pull-right">
+        <!-- Place everything within .navbar-collapse to hide it until above 768px -->
+        <div class="nav-collapse collapse navbar-responsive-collapse">
+            {% if user.is_authenticated %}
+                <ul class="nav navbar-nav pull-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             Logged in as {{ user.username }}
@@ -49,18 +47,18 @@
                         </ul>
                     </li>
                 </ul>
-                {% else %}
+            {% else %}
                 <p class="navbar-text pull-right">
                     <a href="{% url 'account:login' %}" class="navbar-link">Login</a>
                 </p>
-                {% endif %}
-                <!-- .nav, .navbar-search, .navbar-form, etc -->
-                <ul class="nav">
-                    <li class="active"><a href="{% url 'podr:index' %}">Home</a></li>
-                    <li><a href="{% url 'podcast:index' %}">Podcasts</a></li>
-                    <li><a href="{% url 'episode:index' %}">Episodes</a></li>
-                </ul>
-            </div>
+            {% endif %}
+            <!-- .nav, .navbar-search, .navbar-form, etc -->
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="{% url 'podr:index' %}">Home</a></li>
+                <li><a href="{% url 'podcast:index' %}">Podcasts</a></li>
+                <li><a href="{% url 'episode:index' %}">Episodes</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+            </ul>
         </div>
     </div>
 </div>
@@ -74,7 +72,7 @@
 </div>
 
 <div id="player-bar" class="navbar navbar-inverse navbar-fixed-bottom">
-    <div id="player-container" class="navbar-inner">
+    <div id="player-container" class="container">
         <audio id="player-audio" controls="controls">
             <source src="#" type="audio/mpeg" />
             Your browser does not support the audio element.

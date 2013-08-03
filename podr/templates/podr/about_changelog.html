@@ -3,13 +3,13 @@
 {% block content %}
     <div class="container">
         <ul class="breadcrumb">
-            <li><a href="{% url 'podr:index' %}">Home</a> <span class="divider">/</span></li>
-            <li><a href="{% url 'about' %}">About</a> <span class="divider">/</span></li>
+            <li><a href="{% url 'podr:index' %}">Home</a> <span class="divider"></span></li>
+            <li><a href="{% url 'about' %}">About</a> <span class="divider"></span></li>
             <li class="active">Changelog</li>
         </ul>
 
         <h1>Changelog</h1>
-        <div class="tabbable tabs-right">
+        <div class="nav nav-tabs nav-justified">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#tab1" data-toggle="tab">V0.1-Dev</a></li>
                 <li><a href="#tab2" data-toggle="tab">V0.2</a></li>
@@ -36,9 +36,9 @@
                         <li>Podcast/Episode: Rating</li>
                     </ul>
                 </div>
-                <div class="tab-pane" id="tab2">
+                <div class="tab-pane" id="tab3">
                     <ul>
-                        <li></li>
+                        <li>Upgraded template to Bootstrap 3</li>
                     </ul>
                 </div>
             </div>
