@@ -17,11 +17,11 @@
             <div class="itunes-image thumbnails span12">
                 <a href="#" class="thumbnail">
                     {% if episode.itunes_image %}
-                        <img src="{{ episode.itunes_image }}" id="episode-cover" alt="" width="260">
+                        <img class="img-responsive" src="{{ episode.itunes_image }}" id="episode-cover" alt="" width="260">
                     {% elif episode.podcast.itunes_image %}
-                        <img src="{{ episode.podcast.itunes_image }}" id="episode-cover" alt="" width="260">
+                        <img class="img-responsive" src="{{ episode.podcast.itunes_image }}" id="episode-cover" alt="" width="260">
                     {% else %}
-                        <img data-src="{% static "podr/js/holder.js/240x240" %}" id="episode-cover" alt="">
+                        <img class="img-responsive" data-src="{% static "podr/js/holder.js/240x240" %}" id="episode-cover" alt="">
                     {% endif %}
                 </a>
             </div>

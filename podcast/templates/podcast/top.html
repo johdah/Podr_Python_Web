@@ -22,9 +22,9 @@
             <div class="col-lg-3">
                 <div class="subscription-thumbnail-list thumbnail">
                     {% if podcast.itunes_image %}
-                        <img src="{{ podcast.itunes_image }}" alt="" width="260">
+                        <img class="img-responsive" src="{{ podcast.itunes_image }}" alt="" width="260">
                     {% else %}
-                        <img data-src="{% static "podr/js/holder.js/260x180" %}" alt="">
+                        <img class="img-responsive" data-src="{% static "podr/js/holder.js/260x180" %}" alt="">
                     {% endif %}
                     <div class="caption">
                         <h3><a href="{% url 'podcast:details' podcast.id %}">{{ podcast.title }}</a></h3>

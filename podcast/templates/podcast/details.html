@@ -16,9 +16,9 @@
             <div class="itunes-image thumbnails span12">
                 <a href="#" class="thumbnail">
                     {% if podcast.itunes_image %}
-                        <img src="{{ podcast.itunes_image }}" alt="" width="260">
+                        <img class="img-responsive" src="{{ podcast.itunes_image }}" alt="" width="260">
                     {% else %}
-                        <img data-src="{% static "podr/js/holder.js/260x260" %}" alt="">
+                        <img class="img-responsive" data-src="{% static "podr/js/holder.js/260x260" %}" alt="">
                     {% endif %}
                 </a>
             </div>
